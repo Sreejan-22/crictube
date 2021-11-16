@@ -1,7 +1,12 @@
+:root {
+  --bg-color-sidebar: #363740;
+  --bg-color-video-card: #242424;
+}
+
 * {
   margin: 0;
   padding: 0;
-  font-family: "Inter", sans-serif;
+  font-family: "Mulish", sans-serif;
 }
 
 a {
