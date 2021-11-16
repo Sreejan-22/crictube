@@ -1,11 +1,5 @@
 import { Link } from "react-router-dom";
-import {
-  MdHome,
-  MdSearch,
-  MdBookmark,
-  MdVideoLibrary,
-  MdLogout,
-} from "react-icons/md";
+import { MdHome, MdBookmark, MdVideoLibrary, MdLogout } from "react-icons/md";
 import { FiSearch } from "react-icons/fi";
 import "./Home.css";
 
@@ -17,10 +11,10 @@ const Home = () => {
           <Link to="/">Crictube</Link>
         </div>
         <div className="sidebar-option-container">
-          <div className="sidebar-option">
+          <Link to="/" className="sidebar-option">
             <MdHome />
             <span>Home</span>
-          </div>
+          </Link>
           <div className="sidebar-option">
             <FiSearch style={{ position: "relative", top: "2px" }} />
             <span>Search</span>
