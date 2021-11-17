@@ -1,0 +1,75 @@
+.signup-wrapper {
+  width: 100%;
+  padding: 0 30% 0 30%;
+  /* color: #a4a6b3; */
+  color: rgba(245, 245, 245, 0.801);
+}
+
+.signup-container {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  background-color: var(--bg-color-sidebar);
+  border-radius: 5px;
+}
+
+.signup-container > h1 {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.signup-container > h3 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.signup-container > input {
+  border-color: #a4a6b3;
+}
+
+.signup-container > input:hover {
+  border-color: #a4a6b3;
+}
+
+.signup-container > p {
+  text-align: center;
+}
+
+.signup-container a {
+  color: #fc8181;
+}
+
+.signup-container a:hover {
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 1450px) {
+  .signup-wrapper {
+    padding: 0 25% 0 25%;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .signup-wrapper {
+    padding: 0 20% 0 20%;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .signup-wrapper {
+    padding: 0 10% 0 10%;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .signup-wrapper {
+    padding: 0 10% 0 10%;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .signup-wrapper {
+    padding: 0 5% 0 5%;
+  }
+}

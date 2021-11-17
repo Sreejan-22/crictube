@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Layout from "../components/Layout/Layout";
-import { Spinner } from "@chakra-ui/react";
 import "./Home.css";
 
 const url = process.env.REACT_APP_BACKEND_URL;
@@ -28,7 +27,6 @@ const Home = () => {
       <>
         {loading ? (
           <div className="loader-container">
-            {/* <Spinner thickness="4px" speed="1s" color="red.300" size="xl" /> */}
             <h1>Loading...</h1>
           </div>
         ) : null}

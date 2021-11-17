@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { MdHome, MdBookmark, MdVideoLibrary, MdLogout } from "react-icons/md";
+import { MdHome, MdBookmark, MdVideoLibrary } from "react-icons/md";
 import { FiSearch } from "react-icons/fi";
 import "./Layout.css";
 
@@ -28,16 +28,16 @@ const Layout = ({ children }) => {
             <MdVideoLibrary />
             <span>Playlists</span>
           </div>
-          <div className="sidebar-option">
-            <MdLogout />
-            <span>Logout</span>
-          </div>
         </div>
       </div>
       <div className="top-bar">
         <div className="top-bar-space"></div>
-        <div className="navbar-btn">Login</div>
-        <div className="navbar-btn">Signup</div>
+        <Link to="/login" className="navbar-btn">
+          Login
+        </Link>
+        <Link to="/signup" className="navbar-btn">
+          Signup
+        </Link>
       </div>
       <div className="main-content">{children}</div>
     </div>
