@@ -1,10 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ChakraProvider } from "@chakra-ui/react";
 import Home from "./pages/Home.jsx";
 import "./App.css";
 
 function App() {
   return (
-    <>
+    <ChakraProvider>
       <div className="bg"></div>
       <Router>
         <Routes>
@@ -21,7 +22,7 @@ function App() {
           ></Route>
         </Routes>
       </Router>
-    </>
+    </ChakraProvider>
   );
 }
 

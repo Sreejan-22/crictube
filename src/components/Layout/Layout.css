@@ -85,12 +85,3 @@
   text-decoration: underline;
   color: white;
 }
-
-.loader-container {
-  margin-top: 120px;
-  display: flex;
-  justify-content: center;
-  z-index: 5;
-  font-size: 1.2rem;
-  color: white;
-}

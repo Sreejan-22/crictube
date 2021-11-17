@@ -1,40 +1,39 @@
-import { Link } from "react-router-dom";
-import { MdHome, MdBookmark, MdVideoLibrary, MdLogout } from "react-icons/md";
-import { FiSearch } from "react-icons/fi";
+import { useState, useEffect } from "react";
+import Layout from "../components/Layout/Layout";
+import { Spinner } from "@chakra-ui/react";
 import "./Home.css";
 
+const url = process.env.REACT_APP_BACKEND_URL;
+
 const Home = () => {
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(`${url}/videos`)
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err))
+      .finally(
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000)
+      );
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <div className="container">
-      <div className="sidebar">
-        <div className="logo-container">
-          <Link to="/">Crictube</Link>
-        </div>
-        <div className="sidebar-option-container">
-          <Link to="/" className="sidebar-option">
-            <MdHome />
-            <span>Home</span>
-          </Link>
-          <div className="sidebar-option">
-            <FiSearch style={{ position: "relative", top: "2px" }} />
-            <span>Search</span>
+    <Layout>
+      <>
+        {loading ? (
+          <div className="loader-container">
+            {/* <Spinner thickness="4px" speed="1s" color="red.300" size="xl" /> */}
+            <h1>Loading...</h1>
           </div>
-          <div className="sidebar-option">
-            <MdBookmark />
-            <span>Saved</span>
-          </div>
-          <div className="sidebar-option">
-            <MdVideoLibrary />
-            <span>Playlists</span>
-          </div>
-          <div className="sidebar-option">
-            <MdLogout />
-            <span>Logout</span>
-          </div>
-        </div>
-      </div>
-      <div className="main-content"></div>
-    </div>
+        ) : null}
+      </>
+    </Layout>
   );
 };
 
