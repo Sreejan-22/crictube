@@ -35,6 +35,9 @@
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .video-description > h3 {
@@ -44,4 +47,15 @@
 
 .video-description > h3:hover {
   color: white;
+}
+
+.video-icons {
+  display: flex;
+  align-items: center;
+}
+
+.video-icons > svg {
+  font-size: 1.3rem;
+  color: #b6b8c7;
+  cursor: pointer;
 }

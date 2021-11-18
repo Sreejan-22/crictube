@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Layout from "../components/Layout/Layout";
+import { MdBookmark, MdPlaylistAdd, MdBookmarkBorder } from "react-icons/md";
 import "./Home.css";
 import { getImgUrl } from "../utils/getImgUrl";
 
@@ -64,6 +65,13 @@ const Home = () => {
                 <div className="video-description">
                   <h1 title={item.title}>{item.title}</h1>
                   <h3 title={item.channel}>{item.channel}</h3>
+                </div>
+                <div className="video-icons">
+                  <div style={{ flexGrow: "1" }}></div>
+                  <MdBookmarkBorder />
+                  &nbsp;&nbsp;
+                  <MdPlaylistAdd />
+                  &nbsp;&nbsp;
                 </div>
               </div>
             ))}
