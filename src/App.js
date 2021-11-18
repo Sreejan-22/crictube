@@ -8,7 +8,7 @@ import "./App.css";
 
 function App() {
   return (
-    <ChakraProvider>
+    <ChakraProvider style={{ minHeight: window.innerHeight }}>
       <div className="bg"></div>
       <Router>
         <Routes>
