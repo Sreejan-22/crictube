@@ -10,24 +10,6 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [videos, setVideos] = useState([]);
 
-  // const assignCategory = (data) => {
-  //   let obj = {
-  //     highlights: [],
-  //     tutorials: [],
-  //     performances: [],
-  //   };
-
-  //   const temp = [...data];
-  //   obj.highlights = temp.filter((item) => item.category === "highlights");
-  //   obj.highlights.splice(4);
-  //   obj.tutorials = temp.filter((item) => item.category === "tutorials");
-  //   obj.tutorials.splice(4);
-  //   obj.performances = temp.filter((item) => item.category === "performances");
-  //   obj.performances.splice(4);
-
-  //   return obj;
-  // };
-
   useEffect(() => {
     setLoading(true);
 
