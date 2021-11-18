@@ -1,44 +1,49 @@
 import { useState, useEffect } from "react";
 import Layout from "../components/Layout/Layout";
 import "./Home.css";
+import { getImgUrl } from "../utils/getImgUrl";
 
 const url = process.env.REACT_APP_BACKEND_URL;
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
-  const [videos, setVideos] = useState({});
+  const [videos, setVideos] = useState([]);
 
-  const assignCategory = (data) => {
-    let obj = {
-      highlights: [],
-      tutorials: [],
-      performances: [],
-    };
+  // const assignCategory = (data) => {
+  //   let obj = {
+  //     highlights: [],
+  //     tutorials: [],
+  //     performances: [],
+  //   };
 
-    const temp = [...data];
-    obj.highlights = temp.filter((item) => item.category === "highlights");
-    obj.highlights.splice(4);
-    obj.tutorials = temp.filter((item) => item.category === "tutorials");
-    obj.tutorials.splice(4);
-    obj.performances = temp.filter((item) => item.category === "performances");
-    obj.performances.splice(4);
+  //   const temp = [...data];
+  //   obj.highlights = temp.filter((item) => item.category === "highlights");
+  //   obj.highlights.splice(4);
+  //   obj.tutorials = temp.filter((item) => item.category === "tutorials");
+  //   obj.tutorials.splice(4);
+  //   obj.performances = temp.filter((item) => item.category === "performances");
+  //   obj.performances.splice(4);
 
-    return obj;
-  };
+  //   return obj;
+  // };
 
   useEffect(() => {
     setLoading(true);
+
     fetch(`${url}/videos`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          const currVideos = assignCategory(data.videos);
-          setVideos((prev) => currVideos);
+          // const currVideos = assignCategory(data.videos);
+          // console.log(currVideos);
+          setVideos(data.videos);
         } else {
           console.log(data.message);
         }
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err);
+      })
       .finally(() => setLoading(false));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -53,14 +58,13 @@ const Home = () => {
           </div>
         ) : (
           <div className="video-container">
-            {[1, 2, 3, 4, 5, 6].map((item, index) => (
-              <div className="video-card" key={index}>
-                <img
-                  src="https://img.youtube.com/vi/jSmfdD4P7yQ/0.jpg"
-                  alt=""
-                />
-                <h1>Ind tour of Aus 2018 Highlights</h1>
-                <h3>cricket.com.au</h3>
+            {videos.map((item) => (
+              <div className="video-card" key={item._id}>
+                <img src={getImgUrl(item.url)} alt="" />
+                <div className="video-description">
+                  <h1 title={item.title}>{item.title}</h1>
+                  <h3 title={item.channel}>{item.channel}</h3>
+                </div>
               </div>
             ))}
           </div>
