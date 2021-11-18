@@ -11,6 +11,7 @@
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   grid-auto-rows: minmax(220px, auto);
   gap: 1rem;
+  padding-bottom: 1rem;
 }
 
 .video-card {
