@@ -1,10 +1,21 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
+// import PrivateRoute from "./components/PrivateRoute.jsx";
 import Home from "./pages/Home.jsx";
 import Layout from "./components/Layout/Layout.jsx";
 import Signup from "./pages/Signup/Signup.jsx";
 import Login from "./pages/Login/Login.jsx";
 import "./App.css";
+import { isAuthenticated } from "./utils/auth.js";
+
+function ToHome({ children }) {
+  return isAuthenticated() ? <Navigate to="/" /> : children;
+}
 
 function App() {
   return (
@@ -13,8 +24,22 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="signup" element={<Signup />} />
-          <Route path="login" element={<Login />} />
+          <Route
+            path="signup"
+            element={
+              <ToHome>
+                <Signup />
+              </ToHome>
+            }
+          />
+          <Route
+            path="login"
+            element={
+              <ToHome>
+                <Login />
+              </ToHome>
+            }
+          />
           <Route
             path="*"
             element={
