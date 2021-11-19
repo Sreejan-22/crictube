@@ -6,7 +6,7 @@
   grid-template-columns: var(--sidebar-width) 1fr;
   column-gap: 1rem;
   grid-auto-rows: 100vh;
-  overflow: auto;
+  overflow-y: auto;
 }
 
 .sidebar {
