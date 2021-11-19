@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MdHome, MdBookmark, MdVideoLibrary } from "react-icons/md";
 import { FiSearch } from "react-icons/fi";
+import { isAuthenticated } from "../../utils/auth";
 import "./Layout.css";
 
 const Layout = ({ children }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [active, setActive] = useState("home");
   return (
     <div className="container">
@@ -50,12 +53,30 @@ const Layout = ({ children }) => {
       </div>
       <div className="top-bar">
         <div className="top-bar-space"></div>
-        <Link to="/login" className="navbar-btn">
-          Login
-        </Link>
-        <Link to="/signup" className="navbar-btn">
-          Signup
-        </Link>
+        {isAuthenticated() ? (
+          <div
+            className="navbar-btn"
+            onClick={() => {
+              localStorage.removeItem("user");
+              if (location.pathname === "/") {
+                window.location.reload();
+              } else {
+                navigate("/");
+              }
+            }}
+          >
+            Logout
+          </div>
+        ) : (
+          <>
+            <Link to="/login" className="navbar-btn">
+              Login
+            </Link>
+            <Link to="/signup" className="navbar-btn">
+              Signup
+            </Link>
+          </>
+        )}
       </div>
       <div className="main-content">{children}</div>
     </div>
