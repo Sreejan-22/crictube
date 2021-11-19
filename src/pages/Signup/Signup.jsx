@@ -48,8 +48,6 @@ const Signup = () => {
     e.preventDefault();
     setLoading(true);
 
-    console.log(username, email, password);
-
     try {
       const res = await fetch(`${url}/signup`, {
         method: "POST",
@@ -70,19 +68,21 @@ const Signup = () => {
           token: data.token,
         };
         localStorage.setItem("user", JSON.stringify(userData));
+        setLoading(false);
         navigate("/");
       } else {
         if ("serverError" in data) {
+          setLoading(false);
           showToast(data.message);
         } else {
+          setLoading(false);
           showToast(handleSignupError(data.errors));
         }
       }
     } catch (err) {
+      setLoading(false);
       console.log(err);
       showToast("Failed to sign up");
-    } finally {
-      setLoading(false);
     }
   };
 
