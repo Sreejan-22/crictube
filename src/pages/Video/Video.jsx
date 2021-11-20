@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react/cjs/react.development";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Layout from "../../components/Layout/Layout";
 import { MdBookmark, MdPlaylistAdd, MdBookmarkBorder } from "react-icons/md";
 import { getImgUrl } from "../../utils/getImgUrl";
@@ -7,6 +8,9 @@ import "./Video.css";
 const url = process.env.REACT_APP_BACKEND_URL;
 
 const Video = () => {
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const video = state.video;
   const [loading, setLoading] = useState(false);
   const [videos, setVideos] = useState([]);
 
@@ -18,7 +22,7 @@ const Video = () => {
       .then((data) => {
         if (data.success) {
           const temp = data.videos.filter(
-            (item) => item.category === "highlights"
+            (item) => item.category === video.category && item._id !== video._id
           );
           setVideos(temp);
         } else {
@@ -43,28 +47,19 @@ const Video = () => {
             <iframe
               // width="560"
               // height="315"
-              src="https://www.youtube.com/embed/sfJiR2sn3mg"
+              src={video.url}
               title="YouTube video player"
-              frameborder="0"
+              frameBorder="0"
               allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
+              allowFullScreen
               className="video-iframe"
             ></iframe>
-            <h2>4th Test | India Tour Of England 2021 | Full </h2>
+            <h2>{video.title}</h2>
             <p>
-              <span>by </span>Sony Sports India
+              <span>by </span>
+              {video.channel}
             </p>
-            <h4>
-              A remarkable match in The Oval ended with a great win for India,
-              winning the fourth Test match by 157 runs. A remarkable match in
-              The Oval ended with a great win for India, winning the fourth Test
-              match by 157 runs. A remarkable match in The Oval ended with a
-              great win for India, winning the fourth Test match by 157 runs. A
-              remarkable match in The Oval ended with a great win for India,
-              winning the fourth Test match by 157 runs. A remarkable match in
-              The Oval ended with a great win for India, winning the fourth Test
-              match by 157 runs.
-            </h4>
+            <h4>{video.description}</h4>
           </div>
           <div className="other-videos-container">
             <h2>Similar Videos</h2>
@@ -74,11 +69,23 @@ const Video = () => {
                 key={item._id}
                 style={{ marginBottom: "1rem" }}
               >
-                <img src={getImgUrl(item.url)} alt="" />
-                <div className="video-description">
+                <img
+                  src={getImgUrl(item.url)}
+                  alt=""
+                  onClick={() =>
+                    navigate(`/video/${item._id}`, {
+                      state: { video: item },
+                    })
+                  }
+                />
+                <Link
+                  to={`/video/${item._id}`}
+                  state={{ video: item }}
+                  className="video-description"
+                >
                   <h1 title={item.title}>{item.title}</h1>
                   <h3 title={item.channel}>{item.channel}</h3>
-                </div>
+                </Link>
                 <div className="video-icons">
                   <div style={{ flexGrow: "1" }}></div>
                   <MdBookmarkBorder />

@@ -87,6 +87,7 @@
 .video-description > h3 {
   font-size: 0.7rem;
   color: #b6b8c7;
+  cursor: pointer;
 }
 
 /* .video-description > h3:hover {
