@@ -5,12 +5,13 @@ import {
   Navigate,
 } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
-// import PrivateRoute from "./components/PrivateRoute.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
 import Home from "./pages/Home.jsx";
 import Layout from "./components/Layout/Layout.jsx";
 import Signup from "./pages/Signup/Signup.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Video from "./pages/Video/Video.jsx";
+import Playlist from "./pages/Playlist/Playlist.jsx";
 import "./App.css";
 import { isAuthenticated } from "./utils/auth.js";
 
@@ -43,6 +44,14 @@ function App() {
           />
           <Route path="video/:id" element={<Video />} />
           <Route
+            path="/playlists/:playlist"
+            element={
+              <PrivateRoute>
+                <Playlist />
+              </PrivateRoute>
+            }
+          ></Route>
+          <Route
             path="*"
             element={
               <Layout>
@@ -51,6 +60,7 @@ function App() {
                     textAlign: "center",
                     marginTop: "2rem",
                     fontSize: "2rem",
+                    color: "white",
                   }}
                 >
                   This page does not exist!!
