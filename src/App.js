@@ -10,6 +10,7 @@ import Home from "./pages/Home.jsx";
 import Layout from "./components/Layout/Layout.jsx";
 import Signup from "./pages/Signup/Signup.jsx";
 import Login from "./pages/Login/Login.jsx";
+import Video from "./pages/Video/Video.jsx";
 import "./App.css";
 import { isAuthenticated } from "./utils/auth.js";
 
@@ -40,6 +41,7 @@ function App() {
               </ToHome>
             }
           />
+          <Route path="video/:id" element={<Video />} />
           <Route
             path="*"
             element={

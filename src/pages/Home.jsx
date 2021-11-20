@@ -19,8 +19,6 @@ const Home = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          // const currVideos = assignCategory(data.videos);
-          // console.log(currVideos);
           allVideos.current = data.videos;
           setVideos(data.videos);
         } else {
