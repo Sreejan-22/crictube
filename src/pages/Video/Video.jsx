@@ -8,9 +8,9 @@ import "./Video.css";
 const url = process.env.REACT_APP_BACKEND_URL;
 
 const Video = () => {
-  const { state } = useLocation();
+  const location = useLocation();
   const navigate = useNavigate();
-  const video = state.video;
+  const video = location.state.video;
   const [loading, setLoading] = useState(false);
   const [videos, setVideos] = useState([]);
 
@@ -33,7 +33,9 @@ const Video = () => {
         console.log(err);
       })
       .finally(() => setLoading(false));
-  }, []);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
   return (
     <Layout>
