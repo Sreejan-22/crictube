@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import Layout from "../../components/Layout/Layout";
 import { useToast } from "@chakra-ui/react";
 import { getUser } from "../../utils/auth";
+import { getDate } from "../../utils/date";
 import "./AllPlaylists.css";
 
 const url = process.env.REACT_APP_BACKEND_URL;
@@ -58,7 +59,7 @@ const AllPlaylists = () => {
         </h1>
       ) : (
         <div>
-          <h1 style={{ color: "white", fontSize: "1.3rem", fontWeight: "600" }}>
+          <h1 style={{ color: "white", fontSize: "1.5rem", fontWeight: "600" }}>
             Playlists({playlists.length})
           </h1>
           <br />
@@ -67,7 +68,7 @@ const AllPlaylists = () => {
               <div className="playlist" key={item._id}>
                 <h1 className="playlist-name">{item.name}</h1>
                 <h3>{item.videos.length} videos &#8226; Default Playlist</h3>
-                <h3>Last updated: {item.updatedAt}</h3>
+                <h3>Last updated: {getDate(item.updatedAt)}</h3>
                 <br />
                 <br />
                 <Link to="/" className="playlist-link">

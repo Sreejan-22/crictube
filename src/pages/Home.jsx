@@ -1,14 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout/Layout";
-import { MdBookmark, MdPlaylistAdd, MdBookmarkBorder } from "react-icons/md";
+import VideoCard from "../components/VideoCard/VideoCard";
 import "./Home.css";
-import { getImgUrl } from "../utils/getImgUrl";
 
 const url = process.env.REACT_APP_BACKEND_URL;
 
 const Home = () => {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [videos, setVideos] = useState([]);
   const [active, setActive] = useState("all");
@@ -102,32 +99,7 @@ const Home = () => {
               </div>
               <div className="video-container">
                 {videos.map((item) => (
-                  <div className="video-card" key={item._id}>
-                    <img
-                      src={getImgUrl(item.url)}
-                      alt=""
-                      onClick={() =>
-                        navigate(`/video/${item._id}`, {
-                          state: { video: item },
-                        })
-                      }
-                    />
-                    <Link
-                      to={`/video/${item._id}`}
-                      state={{ video: item }}
-                      className="video-description"
-                    >
-                      <h1 title={item.title}>{item.title}</h1>
-                      <h3 title={item.channel}>{item.channel}</h3>
-                    </Link>
-                    <div className="video-icons">
-                      <div style={{ flexGrow: "1" }}></div>
-                      <MdBookmarkBorder />
-                      &nbsp;&nbsp;
-                      <MdPlaylistAdd />
-                      &nbsp;&nbsp;
-                    </div>
-                  </div>
+                  <VideoCard item={item} key={item._id} />
                 ))}
               </div>
             </div>
