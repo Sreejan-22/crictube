@@ -11,6 +11,8 @@ import Layout from "./components/Layout/Layout.jsx";
 import Signup from "./pages/Signup/Signup.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Video from "./pages/Video/Video.jsx";
+import Search from "./pages/Search/Search.jsx";
+import AllPlaylists from "./pages/AllPlaylists/AllPlaylists.jsx";
 import Playlist from "./pages/Playlist/Playlist.jsx";
 import "./App.css";
 import { isAuthenticated } from "./utils/auth.js";
@@ -43,6 +45,15 @@ function App() {
             }
           />
           <Route path="video/:id" element={<Video />} />
+          <Route path="/search" element={<Search />} />
+          <Route
+            path="/allplaylists"
+            element={
+              <PrivateRoute>
+                <AllPlaylists />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="/playlists/:playlist"
             element={
@@ -50,7 +61,7 @@ function App() {
                 <Playlist />
               </PrivateRoute>
             }
-          ></Route>
+          />
           <Route
             path="*"
             element={

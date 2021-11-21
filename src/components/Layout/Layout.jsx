@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MdHome, MdBookmark, MdVideoLibrary } from "react-icons/md";
 import { FiSearch } from "react-icons/fi";
@@ -8,7 +8,24 @@ import "./Layout.css";
 const Layout = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [active, setActive] = useState("home");
+  const [active, setActive] = useState("");
+
+  // check this answer for rendering private routes or any kind of conditional routing in react router v6
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      setActive("home");
+    } else if (location.pathname === "/search") {
+      setActive("search");
+    } else if (location.pathname.includes("/playlists")) {
+      if (location.pathname === "/playlists/saved") {
+        setActive("saved");
+      }
+    } else if (location.pathname === "/allplaylists") {
+      setActive("playlists");
+    }
+  }, [location.pathname]);
+
   return (
     <div className="container">
       <div className="sidebar">
@@ -20,27 +37,29 @@ const Layout = ({ children }) => {
           <Link
             to="/"
             className={`sidebar-option ${active === "home" ? "active" : ""}`}
-            id="active"
             onMouseDown={() => setActive("home")}
           >
             <MdHome />
             <span>Home</span>
           </Link>
-          <div
+          <Link
+            to="/search"
             className={`sidebar-option ${active === "search" ? "active" : ""}`}
             onMouseDown={() => setActive("search")}
           >
             <FiSearch style={{ position: "relative", top: "2px" }} />
             <span>Search</span>
-          </div>
-          <div
+          </Link>
+          <Link
+            to="/playlists/saved"
             className={`sidebar-option ${active === "saved" ? "active" : ""}`}
             onMouseDown={() => setActive("saved")}
           >
             <MdBookmark />
             <span>Saved</span>
-          </div>
-          <div
+          </Link>
+          <Link
+            to="/allplaylists"
             className={`sidebar-option ${
               active === "playlists" ? "active" : ""
             }`}
@@ -48,7 +67,7 @@ const Layout = ({ children }) => {
           >
             <MdVideoLibrary />
             <span>Playlists</span>
-          </div>
+          </Link>
         </div>
       </div>
       <div className="top-bar">

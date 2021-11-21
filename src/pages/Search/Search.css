@@ -1,0 +1,26 @@
+.search-section {
+  display: flex;
+  justify-content: center;
+}
+
+.search-wrapper {
+  width: 60%;
+}
+
+@media screen and (max-width: 1200px) {
+  .search-wrapper {
+    width: 70%;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .search-wrapper {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .search-wrapper {
+    width: 90%;
+  }
+}
