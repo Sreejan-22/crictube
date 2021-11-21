@@ -36,7 +36,7 @@ const Search = () => {
       if (data.success) {
         setVideos(data.results);
       } else {
-        showToast("Failed to fetch search results");
+        showToast(data.message);
       }
     } catch (err) {
       setLoading(false);

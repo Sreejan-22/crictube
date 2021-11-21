@@ -1,0 +1,33 @@
+.playlist-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 170px;
+}
+
+.playlist {
+  background-color: var(--bg-color-sidebar);
+  border-radius: 5px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+}
+
+.playlist-name {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.playlist > h3 {
+  color: #a4a6b3;
+  font-size: 0.9rem;
+}
+
+.playlist-link {
+  color: #7587fa;
+}
+
+.playlist-link:hover {
+  text-decoration: underline;
+}
