@@ -71,7 +71,11 @@ const AllPlaylists = () => {
                 <h3>Last updated: {getDate(item.updatedAt)}</h3>
                 <br />
                 <br />
-                <Link to="/" className="playlist-link">
+                <Link
+                  to={`/playlist/${item._id}`}
+                  state={{ videos: item.videos, playlistName: item.name }}
+                  className="playlist-link"
+                >
                   View Playlist
                 </Link>
               </div>
