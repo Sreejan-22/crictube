@@ -12,6 +12,7 @@ import {
   Input,
   Checkbox,
   CheckboxGroup,
+  Stack,
   useDisclosure,
 } from "@chakra-ui/react";
 import { Spinner } from "@chakra-ui/spinner";
@@ -19,7 +20,7 @@ import { MdBookmark, MdPlaylistAdd, MdBookmarkBorder } from "react-icons/md";
 import { getImgUrl } from "../../utils/getImgUrl";
 import "./VideoCard.css";
 
-const VideoCard = ({ item }) => {
+const VideoCard = ({ item, playlists, isAdded }) => {
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -65,18 +66,18 @@ const VideoCard = ({ item }) => {
           <ModalHeader>Add to playlist</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus,
-            ratione iure consequatur mollitia sint error id iste. Sapiente ut
-            cupiditate nesciunt laudantium cumque numquam odit, quia vel ipsum
-            libero dolor!
+            <Stack>
+              {playlists.map((playlist, index) => (
+                <Checkbox key={playlist._id} isChecked={isAdded[index]}>
+                  {playlist.name}
+                </Checkbox>
+              ))}
+              <br />
+              <Input placeholder="Enter playlist name" />
+              <Button colorScheme="blue">Create new playlist</Button>
+            </Stack>
+            <br />
           </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button variant="ghost">Secondary Action</Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </div>

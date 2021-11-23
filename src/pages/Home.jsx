@@ -10,6 +10,8 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [videos, setVideos] = useState([]);
   const [active, setActive] = useState("all");
+  const [playlists, setPlaylists] = useState([]);
+  const [isAddedToPlaylist, setIsAddedToPlaylist] = useState([]);
   const allVideos = useRef([]);
 
   useEffect(() => {
@@ -26,6 +28,8 @@ const Home = () => {
           console.log(data);
           allVideos.current = data.videos;
           setVideos(data.videos);
+          setPlaylists(data.playlists);
+          setIsAddedToPlaylist(data.isAdded);
         } else {
           console.log(data.message);
         }
@@ -104,8 +108,13 @@ const Home = () => {
                 </div>
               </div>
               <div className="video-container">
-                {videos.map((item) => (
-                  <VideoCard item={item} key={item._id} />
+                {videos.map((item, index) => (
+                  <VideoCard
+                    item={item}
+                    playlists={playlists}
+                    isAdded={isAddedToPlaylist[index]}
+                    key={item._id}
+                  />
                 ))}
               </div>
             </div>
