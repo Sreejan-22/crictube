@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Layout from "../../components/Layout/Layout";
 import VideoCard from "../../components/VideoCard/VideoCard";
 import { MdBookmark, MdPlaylistAdd, MdBookmarkBorder } from "react-icons/md";
-import { getImgUrl } from "../../utils/getImgUrl";
 import { isAuthenticated, getUser } from "../../utils/auth";
 import { isAddedToPlaylist } from "../../utils/isAddedToPlaylist";
 import "./Video.css";
@@ -12,7 +11,6 @@ const main_url = process.env.REACT_APP_BACKEND_URL;
 
 const Video = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const video = location.state.video;
   const [loading, setLoading] = useState(false);
   const [videos, setVideos] = useState([]);

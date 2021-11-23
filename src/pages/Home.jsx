@@ -73,9 +73,6 @@ const Home = () => {
                   }`}
                   onClick={() => {
                     setActive("highlights");
-                    // const temp = allVideos.current.filter(
-                    //   (item) => item.category === "highlights"
-                    // );
                     let temp = [];
                     let flag = [];
                     allVideos.current.forEach((item, index) => {
@@ -96,10 +93,6 @@ const Home = () => {
                   }`}
                   onClick={() => {
                     setActive("tutorials");
-                    // const temp = allVideos.current.filter(
-                    //   (item) => item.category === "tutorials"
-                    // );
-                    // setVideos(temp);
                     let temp = [];
                     let flag = [];
                     allVideos.current.forEach((item, index) => {
@@ -120,10 +113,6 @@ const Home = () => {
                   }`}
                   onClick={() => {
                     setActive("performances");
-                    // const temp = allVideos.current.filter(
-                    //   (item) => item.category === "performances"
-                    // );
-                    // setVideos(temp);
                     let temp = [];
                     let flag = [];
                     allVideos.current.forEach((item, index) => {
