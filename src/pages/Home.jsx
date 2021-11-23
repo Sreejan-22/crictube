@@ -13,6 +13,7 @@ const Home = () => {
   const [playlists, setPlaylists] = useState([]);
   const [isAddedToPlaylist, setIsAddedToPlaylist] = useState([]);
   const allVideos = useRef([]);
+  const isAddedToPlaylistInitial = useRef([]);
 
   useEffect(() => {
     const url = isAuthenticated()
@@ -27,6 +28,7 @@ const Home = () => {
         if (data.success) {
           console.log(data);
           allVideos.current = data.videos;
+          isAddedToPlaylistInitial.current = data.isAdded;
           setVideos(data.videos);
           setPlaylists(data.playlists);
           setIsAddedToPlaylist(data.isAdded);
@@ -59,6 +61,7 @@ const Home = () => {
                   onClick={() => {
                     setActive("all");
                     setVideos(allVideos.current);
+                    setIsAddedToPlaylist(isAddedToPlaylistInitial.current);
                   }}
                   style={{ borderRadius: "16px" }}
                 >
@@ -70,10 +73,19 @@ const Home = () => {
                   }`}
                   onClick={() => {
                     setActive("highlights");
-                    const temp = allVideos.current.filter(
-                      (item) => item.category === "highlights"
-                    );
+                    // const temp = allVideos.current.filter(
+                    //   (item) => item.category === "highlights"
+                    // );
+                    let temp = [];
+                    let flag = [];
+                    allVideos.current.forEach((item, index) => {
+                      if (item.category === "highlights") {
+                        temp.push(item);
+                        flag.push(isAddedToPlaylist[index]);
+                      }
+                    });
                     setVideos(temp);
+                    setIsAddedToPlaylist(flag);
                   }}
                 >
                   Highlights
@@ -84,10 +96,20 @@ const Home = () => {
                   }`}
                   onClick={() => {
                     setActive("tutorials");
-                    const temp = allVideos.current.filter(
-                      (item) => item.category === "tutorials"
-                    );
+                    // const temp = allVideos.current.filter(
+                    //   (item) => item.category === "tutorials"
+                    // );
+                    // setVideos(temp);
+                    let temp = [];
+                    let flag = [];
+                    allVideos.current.forEach((item, index) => {
+                      if (item.category === "tutorials") {
+                        temp.push(item);
+                        flag.push(isAddedToPlaylist[index]);
+                      }
+                    });
                     setVideos(temp);
+                    setIsAddedToPlaylist(flag);
                   }}
                 >
                   Tutorials
@@ -98,10 +120,20 @@ const Home = () => {
                   }`}
                   onClick={() => {
                     setActive("performances");
-                    const temp = allVideos.current.filter(
-                      (item) => item.category === "performances"
-                    );
+                    // const temp = allVideos.current.filter(
+                    //   (item) => item.category === "performances"
+                    // );
+                    // setVideos(temp);
+                    let temp = [];
+                    let flag = [];
+                    allVideos.current.forEach((item, index) => {
+                      if (item.category === "performances") {
+                        temp.push(item);
+                        flag.push(isAddedToPlaylist[index]);
+                      }
+                    });
                     setVideos(temp);
+                    setIsAddedToPlaylist(flag);
                   }}
                 >
                   Best Performances
