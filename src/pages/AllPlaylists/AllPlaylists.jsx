@@ -4,6 +4,7 @@ import Layout from "../../components/Layout/Layout";
 import { useToast } from "@chakra-ui/react";
 import { getUser } from "../../utils/auth";
 import { getDate } from "../../utils/date";
+import { isAddedToPlaylist } from "../../utils/isAddedToPlaylist";
 import "./AllPlaylists.css";
 
 const url = process.env.REACT_APP_BACKEND_URL;
@@ -34,7 +35,6 @@ const AllPlaylists = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          console.log(data.playlists);
           setPlaylists(data.playlists);
           setLoading(false);
         } else {
@@ -72,7 +72,12 @@ const AllPlaylists = () => {
                 <br />
                 <Link
                   to={`/playlist/${item._id}`}
-                  state={{ videos: item.videos, playlistName: item.name }}
+                  state={{
+                    videos: item.videos,
+                    playlistName: item.name,
+                    playlists,
+                    isAdded: isAddedToPlaylist(item.videos, playlists),
+                  }}
                   className="playlist-link"
                 >
                   View Playlist
