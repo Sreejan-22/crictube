@@ -108,13 +108,7 @@ const Search = () => {
               </div>
             ))}
           </div>
-        ) : (
-          <h1
-            style={{ color: "white", fontSize: "1.2rem", textAlign: "center" }}
-          >
-            No results found
-          </h1>
-        )}
+        ) : null}
       </div>
     </Layout>
   );

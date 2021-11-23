@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import Layout from "../components/Layout/Layout";
 import VideoCard from "../components/VideoCard/VideoCard";
+import { isAuthenticated, getUser } from "../utils/auth";
 import "./Home.css";
 
-const url = process.env.REACT_APP_BACKEND_URL;
+const main_url = process.env.REACT_APP_BACKEND_URL;
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
@@ -12,12 +13,17 @@ const Home = () => {
   const allVideos = useRef([]);
 
   useEffect(() => {
+    const url = isAuthenticated()
+      ? `${main_url}/uservideos/${getUser().username}`
+      : `${main_url}/videos`;
+
     setLoading(true);
 
-    fetch(`${url}/videos`)
+    fetch(url)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
+          console.log(data);
           allVideos.current = data.videos;
           setVideos(data.videos);
         } else {
