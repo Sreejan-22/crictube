@@ -5,13 +5,11 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
   Button,
   Input,
   Checkbox,
-  CheckboxGroup,
   Stack,
   useDisclosure,
 } from "@chakra-ui/react";

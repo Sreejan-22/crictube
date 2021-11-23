@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Layout from "../../components/Layout/Layout";
 import { useToast } from "@chakra-ui/react";
 import { getUser } from "../../utils/auth";
@@ -9,7 +9,6 @@ import "./AllPlaylists.css";
 const url = process.env.REACT_APP_BACKEND_URL;
 
 const AllPlaylists = () => {
-  // const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [playlists, setPlaylists] = useState([]);
   const toast = useToast();

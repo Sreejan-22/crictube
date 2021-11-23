@@ -26,7 +26,7 @@ const Home = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          console.log(data);
+          // console.log(data);
           allVideos.current = data.videos;
           isAddedToPlaylistInitial.current = data.isAdded;
           setVideos(data.videos);
