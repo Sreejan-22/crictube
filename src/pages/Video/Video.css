@@ -40,6 +40,18 @@
   height: 500px;
 }
 
+.single-video-icons {
+  display: flex;
+  align-items: center;
+  color: #b6b8c7;
+  font-size: 1.7rem;
+  margin: 1rem 0rem;
+}
+
+.single-video-icons > svg {
+  cursor: pointer;
+}
+
 .other-videos-container {
   width: 300px;
   display: flex;

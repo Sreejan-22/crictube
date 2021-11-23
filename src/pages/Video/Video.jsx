@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react/cjs/react.development";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Layout from "../../components/Layout/Layout";
+import VideoCard from "../../components/VideoCard/VideoCard";
 import { MdBookmark, MdPlaylistAdd, MdBookmarkBorder } from "react-icons/md";
 import { getImgUrl } from "../../utils/getImgUrl";
+import { isAuthenticated, getUser } from "../../utils/auth";
+import { isAddedToPlaylist } from "../../utils/isAddedToPlaylist";
 import "./Video.css";
 
-const url = process.env.REACT_APP_BACKEND_URL;
+const main_url = process.env.REACT_APP_BACKEND_URL;
 
 const Video = () => {
   const location = useLocation();
@@ -13,11 +16,17 @@ const Video = () => {
   const video = location.state.video;
   const [loading, setLoading] = useState(false);
   const [videos, setVideos] = useState([]);
+  const [playlists, setPlaylists] = useState([]);
+  const [isAdded, setIsAdded] = useState([]);
 
   useEffect(() => {
+    const url = isAuthenticated()
+      ? `${main_url}/alluservideos/${getUser().username}`
+      : `${main_url}/videos`;
+
     setLoading(true);
 
-    fetch(`${url}/videos`)
+    fetch(url)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -25,6 +34,10 @@ const Video = () => {
             (item) => item.category === video.category && item._id !== video._id
           );
           setVideos(temp);
+          if (isAuthenticated()) {
+            setPlaylists(data.playlists);
+            setIsAdded(isAddedToPlaylist(temp, data.playlists));
+          }
         } else {
           console.log(data.message);
         }
@@ -61,41 +74,22 @@ const Video = () => {
               <span>by </span>
               {video.channel}
             </p>
+            <div className="single-video-icons">
+              <div style={{ flexGrow: "1" }}></div>
+              <MdBookmarkBorder />
+              <MdPlaylistAdd style={{ marginLeft: "1rem" }} />
+            </div>
+            <hr style={{ borderColor: "gray" }} />
             <h4>{video.description}</h4>
           </div>
           <div className="other-videos-container">
             <h2>Similar Videos</h2>
-            {videos.map((item) => (
-              <div
-                className="video-card"
-                key={item._id}
-                style={{ marginBottom: "1rem" }}
-              >
-                <img
-                  src={getImgUrl(item.url)}
-                  alt=""
-                  onClick={() =>
-                    navigate(`/video/${item._id}`, {
-                      state: { video: item },
-                    })
-                  }
-                />
-                <Link
-                  to={`/video/${item._id}`}
-                  state={{ video: item }}
-                  className="video-description"
-                >
-                  <h1 title={item.title}>{item.title}</h1>
-                  <h3 title={item.channel}>{item.channel}</h3>
-                </Link>
-                <div className="video-icons">
-                  <div style={{ flexGrow: "1" }}></div>
-                  <MdBookmarkBorder />
-                  &nbsp;&nbsp;
-                  <MdPlaylistAdd />
-                  &nbsp;&nbsp;
-                </div>
-              </div>
+            {videos.map((item, index) => (
+              <VideoCard
+                item={item}
+                playlists={playlists}
+                isAdded={isAdded[index]}
+              />
             ))}
           </div>
         </div>

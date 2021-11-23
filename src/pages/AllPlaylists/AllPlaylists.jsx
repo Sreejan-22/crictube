@@ -66,7 +66,10 @@ const AllPlaylists = () => {
             {playlists.map((item) => (
               <div className="playlist" key={item._id}>
                 <h1 className="playlist-name">{item.name}</h1>
-                <h3>{item.videos.length} videos &#8226; Default Playlist</h3>
+                <h3>
+                  {item.videos.length} videos &#8226;{" "}
+                  {item.name === "Saved" ? "Default Playlist" : "User Playlist"}
+                </h3>
                 <h3>Last updated: {getDate(item.updatedAt)}</h3>
                 <br />
                 <br />

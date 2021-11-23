@@ -35,13 +35,13 @@ const VideoCard = ({ item, playlists, isAdded }) => {
         alt=""
         onClick={() =>
           navigate(`/video/${item._id}`, {
-            state: { video: item },
+            state: { video: item, playlists },
           })
         }
       />
       <Link
         to={`/video/${item._id}`}
-        state={{ video: item }}
+        state={{ video: item, playlists }}
         className="video-description"
       >
         <h1 title={item.title}>{item.title}</h1>

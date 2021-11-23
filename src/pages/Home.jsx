@@ -17,7 +17,7 @@ const Home = () => {
 
   useEffect(() => {
     const url = isAuthenticated()
-      ? `${main_url}/uservideos/${getUser().username}`
+      ? `${main_url}/alluservideos/${getUser().username}`
       : `${main_url}/videos`;
 
     setLoading(true);
