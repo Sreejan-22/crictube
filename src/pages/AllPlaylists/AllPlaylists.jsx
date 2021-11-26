@@ -4,7 +4,6 @@ import Layout from "../../components/Layout/Layout";
 import { useToast } from "@chakra-ui/react";
 import { getUser } from "../../utils/auth";
 import { getDate } from "../../utils/date";
-import { isAddedToPlaylist } from "../../utils/isAddedToPlaylist";
 import "./AllPlaylists.css";
 
 const url = process.env.REACT_APP_BACKEND_URL;
@@ -26,7 +25,7 @@ const AllPlaylists = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`${url}/playlists/${getUser().username}`, {
+    fetch(`${url}/profile/${getUser().username}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getUser().token}`,
@@ -35,7 +34,7 @@ const AllPlaylists = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          setPlaylists(data.playlists);
+          setPlaylists(data.userProfile.playlists);
           setLoading(false);
         } else {
           setLoading(false);
@@ -58,36 +57,49 @@ const AllPlaylists = () => {
         </h1>
       ) : (
         <div>
-          <h1 style={{ color: "white", fontSize: "1.5rem", fontWeight: "600" }}>
-            Playlists({playlists.length})
-          </h1>
-          <br />
-          <div className="playlist-container">
-            {playlists.map((item) => (
-              <div className="playlist" key={item._id}>
-                <h1 className="playlist-name">{item.name}</h1>
-                <h3>
-                  {item.videos.length} videos &#8226;{" "}
-                  {item.name === "Saved" ? "Default Playlist" : "User Playlist"}
-                </h3>
-                <h3>Last updated: {getDate(item.updatedAt)}</h3>
-                <br />
-                <br />
-                <Link
-                  to={`/playlist/${item._id}`}
-                  state={{
-                    videos: item.videos,
-                    playlistName: item.name,
-                    playlists,
-                    isAdded: isAddedToPlaylist(item.videos, playlists),
-                  }}
-                  className="playlist-link"
-                >
-                  View Playlist
-                </Link>
+          {playlists.length ? (
+            <>
+              <h1
+                style={{
+                  color: "white",
+                  fontSize: "1.5rem",
+                  fontWeight: "600",
+                }}
+              >
+                Playlists({playlists.length})
+              </h1>
+              <br />
+              <div className="playlist-container">
+                {playlists.map((item) => (
+                  <div className="playlist" key={item._id}>
+                    <h1 className="playlist-name">{item.name}</h1>
+                    <h3>
+                      {item.videos.length} videos &#8226;{" "}
+                      {item.name === "Saved"
+                        ? "Default Playlist"
+                        : "User Playlist"}
+                    </h3>
+                    <h3>Last updated: {getDate(item.updatedAt)}</h3>
+                    <br />
+                    <br />
+                    <Link
+                      to={`/playlist/${item._id}`}
+                      state={{
+                        videos: item.videos,
+                        playlistName: item.name,
+                        playlists,
+                      }}
+                      className="playlist-link"
+                    >
+                      View Playlist
+                    </Link>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          ) : (
+            <h1 className="h1-style">No playlists found</h1>
+          )}
         </div>
       )}
     </Layout>
