@@ -10,7 +10,7 @@ import Home from "./pages/Home.jsx";
 import Layout from "./components/Layout/Layout.jsx";
 import Signup from "./pages/Signup/Signup.jsx";
 import Login from "./pages/Login/Login.jsx";
-import Video from "./pages/Video/Video.jsx";
+import Video from "./pages/VideoDetails/VideoDetails.jsx";
 import Search from "./pages/Search/Search.jsx";
 import AllPlaylists from "./pages/AllPlaylists/AllPlaylists.jsx";
 import Playlist from "./pages/Playlist/Playlist.jsx";

@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { videoSelector, setUserData } from "../../slices/video.slice";
+import {
+  videoSelector,
+  setUserData,
+  setPlaylists,
+} from "../../slices/video.slice";
 import {
   Modal,
   ModalOverlay,
@@ -19,11 +23,12 @@ import { Spinner } from "@chakra-ui/spinner";
 import { MdBookmark, MdPlaylistAdd, MdBookmarkBorder } from "react-icons/md";
 import { getImgUrl } from "../../utils/getImgUrl";
 import { isAuthenticated, getUser } from "../../utils/auth";
+import { isIncludedInArray } from "../../utils/isIncludedInArray";
 import "./VideoCard.css";
 
 const main_url = process.env.REACT_APP_BACKEND_URL;
 
-const VideoCard = ({ item }) => {
+const VideoCard = ({ video }) => {
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,7 +36,7 @@ const VideoCard = ({ item }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   const [newPlaylistName, setNewPlaylistName] = useState("");
-  const video = isAuthenticated() ? item.videoId : item;
+  const { playlists } = useSelector(videoSelector);
 
   const saveVideo = () => {
     console.log();
@@ -39,10 +44,12 @@ const VideoCard = ({ item }) => {
   };
 
   const createNewPlaylist = async (name) => {
+    if (!name.length) {
+      return;
+    }
     const playlistName = name;
-    const url = `${main_url}/newplaylist/${getUser().username}`;
-    let video = item.videoId;
-    video = {
+    const url = `${main_url}/playlists/${getUser().username}`;
+    let videoData = {
       _id: video._id,
       category: video.category,
       url: video.url,
@@ -62,18 +69,13 @@ const VideoCard = ({ item }) => {
           Authorization: `Bearer ${getUser().token}`,
         },
         body: JSON.stringify({
-          video,
+          video: videoData,
           name: playlistName,
         }),
       });
       const data = await res.json();
       if (data.success) {
-        dispatch(
-          setUserData({
-            videos: data.updatedUserProfile.allVideos,
-            playlists: data.updatedUserProfile.playlists,
-          })
-        );
+        dispatch(setPlaylists(data.playlists));
         setLoading(false);
       } else {
         setLoading(false);
@@ -87,9 +89,10 @@ const VideoCard = ({ item }) => {
   };
 
   const addToOrRemoveFromPlaylist = async (e, id) => {
-    if (e.target.checked) {
-      // remove from playlist
-      const url = `${main_url}/userplaylist/remove/${getUser().username}`;
+    if (!e.target.checked) {
+      // which means the checkbox has been unchecked just now
+      // so remove the video from playlist
+      const url = `${main_url}/playlists/remove/${getUser().username}`;
 
       setLoading2(true);
 
@@ -101,18 +104,13 @@ const VideoCard = ({ item }) => {
             Authorization: `Bearer ${getUser().token}`,
           },
           body: JSON.stringify({
-            videoId: item.videoId._id,
+            videoId: video._id,
             playlistId: id,
           }),
         });
         const data = await res.json();
         if (data.success) {
-          dispatch(
-            setUserData({
-              videos: data.updatedUserProfile.allVideos,
-              playlists: data.updatedUserProfile.playlists,
-            })
-          );
+          dispatch(setPlaylists(data.playlists));
           setLoading2(false);
         } else {
           setLoading2(false);
@@ -124,10 +122,10 @@ const VideoCard = ({ item }) => {
         alert("Something went wrong");
       }
     } else {
-      // add to this playlist
-      const url = `${main_url}/userplaylist/add/${getUser().username}`;
-      let video = item.videoId;
-      video = {
+      // which means the checkbox has been checked just now
+      // so add the video from playlist
+      const url = `${main_url}/playlists/add/${getUser().username}`;
+      let videoData = {
         _id: video._id,
         category: video.category,
         url: video.url,
@@ -146,18 +144,13 @@ const VideoCard = ({ item }) => {
             Authorization: `Bearer ${getUser().token}`,
           },
           body: JSON.stringify({
-            video: video,
-            playlistId: id,
+            id,
+            video: videoData,
           }),
         });
         const data = await res.json();
         if (data.success) {
-          dispatch(
-            setUserData({
-              videos: data.updatedUserProfile.allVideos,
-              playlists: data.updatedUserProfile.playlists,
-            })
-          );
+          dispatch(setPlaylists(data.playlists));
           setLoading2(false);
         } else {
           setLoading2(false);
@@ -178,13 +171,13 @@ const VideoCard = ({ item }) => {
         alt=""
         onClick={() => {
           navigate(`/video/${video._id}`, {
-            state: { video: item },
+            state: { video },
           });
         }}
       />
       <Link
         to={`/video/${video._id}`}
-        state={{ video: item }}
+        state={{ video }}
         className="video-description"
       >
         <h1 title={video.title}>{video.title}</h1>
@@ -198,7 +191,7 @@ const VideoCard = ({ item }) => {
           <MdBookmarkBorder
             onClick={() => {
               if (isAuthenticated()) {
-                saveVideo(item);
+                saveVideo(video);
               } else {
                 window.alert("Not authenticated");
               }
@@ -225,16 +218,25 @@ const VideoCard = ({ item }) => {
           <ModalBody>
             <Stack>
               {isAuthenticated()
-                ? item.playlists.map((playlist) => (
-                    <Checkbox
-                      key={playlist._id}
-                      onChange={(e) => {
-                        addToOrRemoveFromPlaylist(e, playlist._id);
-                      }}
-                    >
-                      {playlist.name}
-                    </Checkbox>
-                  ))
+                ? playlists
+                    .filter((playlist) => playlist.name !== "Saved")
+                    .map((playlist) => (
+                      <Checkbox
+                        key={playlist._id}
+                        isChecked={isIncludedInArray(
+                          playlist.videos,
+                          video._id
+                        )}
+                        isDisabled={loading2}
+                        onChange={(e) => {
+                          e.preventDefault();
+                          addToOrRemoveFromPlaylist(e, playlist._id);
+                          // console.log(e.target.checked);
+                        }}
+                      >
+                        {playlist.name}
+                      </Checkbox>
+                    ))
                 : null}
               <br />
               {loading2 ? (
@@ -246,6 +248,7 @@ const VideoCard = ({ item }) => {
               <Input
                 placeholder="Enter playlist name"
                 onChange={(e) => setNewPlaylistName(e.target.value)}
+                isDisabled={loading}
               />
               <Button
                 colorScheme="blue"

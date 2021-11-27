@@ -10,15 +10,13 @@ import Layout from "../../components/Layout/Layout";
 import VideoCard from "../../components/VideoCard/VideoCard";
 import { MdBookmark, MdPlaylistAdd, MdBookmarkBorder } from "react-icons/md";
 import { isAuthenticated, getUser } from "../../utils/auth";
-import "./Video.css";
+import "./VideoDetails.css";
 
 const main_url = process.env.REACT_APP_BACKEND_URL;
 
 const Video = () => {
   const location = useLocation();
-  const video = isAuthenticated()
-    ? location.state.video.videoId
-    : location.state.video;
+  const video = location.state.video;
 
   const [loading, setLoading] = useState(false);
   // const [videos, setVideos] = useState([]);
@@ -26,29 +24,29 @@ const Video = () => {
   const { currVideos } = useSelector(videoSelector);
 
   useEffect(() => {
-    const url = isAuthenticated()
-      ? `${main_url}/singlevideo/${getUser().username}?category=${
-          video.category
-        }&currVideoId=${video._id}`
-      : `${main_url}/videos/${video.category}?videoId=${video._id}`;
+    async function load() {
+      const url = isAuthenticated()
+        ? `${main_url}/uservideos/${getUser().username}?category=${
+            video.category
+          }&currVideoId=${video._id}`
+        : `${main_url}/videos/${video.category}?videoId=${video._id}`;
 
-    const headers = isAuthenticated()
-      ? {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${getUser().token}`,
-        }
-      : { "Content-type": "application/json" };
+      const headers = isAuthenticated()
+        ? {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${getUser().token}`,
+          }
+        : { "Content-type": "application/json" };
 
-    setLoading(true);
+      setLoading(true);
 
-    fetch(url, {
-      headers: headers,
-    })
-      .then((res) => res.json())
-      .then((data) => {
+      try {
+        const res = await fetch(url, { headers: headers });
+        const data = await res.json();
+
         if (data.success) {
           if (isAuthenticated()) {
-            dispatch(setPlaylists(data.userProfile.playlists));
+            dispatch(setPlaylists(data.playlists));
           }
           dispatch(setVideos(data.videos));
           setLoading(false);
@@ -56,11 +54,13 @@ const Video = () => {
           setLoading(false);
           alert(data.message);
         }
-      })
-      .catch((err) => {
+      } catch (err) {
         setLoading(false);
         console.log(err);
-      });
+      }
+    }
+
+    load();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
@@ -100,7 +100,7 @@ const Video = () => {
           <div className="other-videos-container">
             <h2>Similar Videos</h2>
             {currVideos.map((item) => (
-              <VideoCard item={item} key={item._id} />
+              <VideoCard video={item} key={item._id} />
             ))}
           </div>
         </div>

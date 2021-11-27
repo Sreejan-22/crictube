@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { videoSelector, setUserData, setVideos } from "../slices/video.slice";
 import Layout from "../components/Layout/Layout";
@@ -10,57 +10,45 @@ const main_url = process.env.REACT_APP_BACKEND_URL;
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
-  // const [videos, setVideos] = useState([]);
   const [active, setActive] = useState("all");
-  // const [playlists, setPlaylists] = useState([]);
-  const videosRef = useRef([]);
   const dispatch = useDispatch();
-  const { currVideos } = useSelector(videoSelector);
+  const { allVideos, currVideos } = useSelector(videoSelector);
 
   useEffect(() => {
-    const url = isAuthenticated()
-      ? `${main_url}/profile/${getUser().username}`
-      : `${main_url}/videos`;
+    async function load() {
+      const url = isAuthenticated()
+        ? `${main_url}/alluservideos/${getUser().username}`
+        : `${main_url}/videos`;
 
-    const headers = isAuthenticated()
-      ? {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${getUser().token}`,
-        }
-      : {};
+      const headers = isAuthenticated()
+        ? {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${getUser().token}`,
+          }
+        : {};
 
-    setLoading(true);
+      setLoading(true);
 
-    fetch(url, {
-      headers: headers,
-    })
-      .then((res) => res.json())
-      .then((data) => {
+      try {
+        const res = await fetch(url, { headers: headers });
+        const data = await res.json();
         if (data.success) {
           console.log(data);
-          if (isAuthenticated()) {
-            videosRef.current = data.userProfile.allVideos;
-            dispatch(
-              setUserData({
-                videos: data.userProfile.allVideos,
-                playlists: data.userProfile.playlists,
-              })
-            );
-          } else {
-            videosRef.current = data.videos;
-            dispatch(setUserData({ videos: data.videos, playlists: [] }));
-          }
+          dispatch(
+            setUserData({ videos: data.videos, playlists: data.playlists })
+          );
           setLoading(false);
         } else {
           setLoading(false);
           console.log(data.message);
         }
-      })
-      .catch((err) => {
+      } catch (err) {
         setLoading(false);
         console.log(err);
-      });
+      }
+    }
 
+    load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -80,7 +68,7 @@ const Home = () => {
                   className={`tag ${active === "all" ? "active-tag" : ""}`}
                   onClick={() => {
                     setActive("all");
-                    dispatch(setVideos(videosRef.current));
+                    dispatch(setVideos(allVideos));
                   }}
                   style={{ borderRadius: "16px" }}
                 >
@@ -92,16 +80,9 @@ const Home = () => {
                   }`}
                   onClick={() => {
                     setActive("highlights");
-                    let temp = [];
-                    if (isAuthenticated()) {
-                      temp = videosRef.current.filter(
-                        (video) => video.videoId.category === "highlights"
-                      );
-                    } else {
-                      temp = videosRef.current.filter(
-                        (video) => video.category === "highlights"
-                      );
-                    }
+                    const temp = allVideos.filter(
+                      (video) => video.category === "highlights"
+                    );
                     dispatch(setVideos(temp));
                   }}
                 >
@@ -113,16 +94,9 @@ const Home = () => {
                   }`}
                   onClick={() => {
                     setActive("tutorials");
-                    let temp = [];
-                    if (isAuthenticated()) {
-                      temp = videosRef.current.filter(
-                        (video) => video.videoId.category === "tutorials"
-                      );
-                    } else {
-                      temp = videosRef.current.filter(
-                        (video) => video.category === "tutorials"
-                      );
-                    }
+                    const temp = allVideos.filter(
+                      (video) => video.category === "tutorials"
+                    );
                     dispatch(setVideos(temp));
                   }}
                 >
@@ -134,16 +108,9 @@ const Home = () => {
                   }`}
                   onClick={() => {
                     setActive("performances");
-                    let temp = [];
-                    if (isAuthenticated()) {
-                      temp = videosRef.current.filter(
-                        (video) => video.videoId.category === "performances"
-                      );
-                    } else {
-                      temp = videosRef.current.filter(
-                        (video) => video.category === "performances"
-                      );
-                    }
+                    const temp = allVideos.filter(
+                      (video) => video.category === "performances"
+                    );
                     dispatch(setVideos(temp));
                   }}
                 >
@@ -152,7 +119,7 @@ const Home = () => {
               </div>
               <div className="video-container">
                 {currVideos.map((item) => (
-                  <VideoCard item={item} key={item._id} />
+                  <VideoCard video={item} key={item._id} />
                 ))}
               </div>
             </div>
