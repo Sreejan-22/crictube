@@ -1,16 +1,19 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { videoSelector, setPlaylists } from "../../slices/video.slice";
 import Layout from "../../components/Layout/Layout";
 import { useToast } from "@chakra-ui/react";
 import { getUser } from "../../utils/auth";
 import { getDate } from "../../utils/date";
 import "./AllPlaylists.css";
 
-const url = process.env.REACT_APP_BACKEND_URL;
+const main_url = process.env.REACT_APP_BACKEND_URL;
 
 const AllPlaylists = () => {
   const [loading, setLoading] = useState(false);
-  const [playlists, setPlaylists] = useState([]);
+  const dispatch = useDispatch();
+  const { playlists } = useSelector(videoSelector);
   const toast = useToast();
 
   const showToast = (title) => {
@@ -24,8 +27,10 @@ const AllPlaylists = () => {
   };
 
   useEffect(() => {
+    const url = `${main_url}/playlists/${getUser().username}`;
+
     setLoading(true);
-    fetch(`${url}/profile/${getUser().username}`, {
+    fetch(url, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getUser().token}`,
@@ -34,7 +39,7 @@ const AllPlaylists = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          setPlaylists(data.userProfile.playlists);
+          dispatch(setPlaylists(data.playlists));
           setLoading(false);
         } else {
           setLoading(false);
@@ -43,6 +48,7 @@ const AllPlaylists = () => {
       })
       .catch((err) => {
         setLoading(false);
+        console.log(err);
         showToast("Failed to fetch playlists");
       });
 
@@ -70,31 +76,29 @@ const AllPlaylists = () => {
               </h1>
               <br />
               <div className="playlist-container">
-                {playlists.map((item) => (
-                  <div className="playlist" key={item._id}>
-                    <h1 className="playlist-name">{item.name}</h1>
-                    <h3>
-                      {item.videos.length} videos &#8226;{" "}
-                      {item.name === "Saved"
-                        ? "Default Playlist"
-                        : "User Playlist"}
-                    </h3>
-                    <h3>Last updated: {getDate(item.updatedAt)}</h3>
-                    <br />
-                    <br />
-                    <Link
-                      to={`/playlist/${item._id}`}
-                      state={{
-                        videos: item.videos,
-                        playlistName: item.name,
-                        playlists,
-                      }}
-                      className="playlist-link"
-                    >
-                      View Playlist
-                    </Link>
-                  </div>
-                ))}
+                {playlists
+                  .filter((playlist) => playlist.name !== "Saved")
+                  .map((playlist) => (
+                    <div className="playlist" key={playlist._id}>
+                      <h1 className="playlist-name">{playlist.name}</h1>
+                      <h3>
+                        {playlist.videos.length} videos &#8226;{" "}
+                        {playlist.name === "Saved"
+                          ? "Default Playlist"
+                          : "User Playlist"}
+                      </h3>
+                      <h3>Last updated: {getDate(playlist.updatedAt)}</h3>
+                      <br />
+                      <br />
+                      <Link
+                        to={`/playlist/${playlist._id}`}
+                        state={{ playlist }}
+                        className="playlist-link"
+                      >
+                        View Playlist
+                      </Link>
+                    </div>
+                  ))}
               </div>
             </>
           ) : (
