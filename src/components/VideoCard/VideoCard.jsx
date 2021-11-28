@@ -253,6 +253,7 @@ const VideoCard = ({ video }) => {
           <Spinner />
         ) : isSaved(playlists, video._id) ? (
           <MdBookmark
+            style={{ color: "white" }}
             onClick={() => {
               if (isAuthenticated()) {
                 unsaveVideo(video);
