@@ -1,7 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { isAuthenticated, getUser } from "../utils/auth";
-
-const main_url = process.env.REACT_APP_BACKEND_URL;
 
 const initialState = {
   allVideos: [],

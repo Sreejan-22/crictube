@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  videoSelector,
-  setUserData,
-  setPlaylists,
-} from "../../slices/video.slice";
+import { videoSelector, setPlaylists } from "../../slices/video.slice";
 import {
   Modal,
   ModalOverlay,
@@ -24,6 +20,7 @@ import { MdBookmark, MdPlaylistAdd, MdBookmarkBorder } from "react-icons/md";
 import { getImgUrl } from "../../utils/getImgUrl";
 import { isAuthenticated, getUser } from "../../utils/auth";
 import { isIncludedInArray } from "../../utils/isIncludedInArray";
+import { isSaved } from "../../utils/isSaved";
 import "./VideoCard.css";
 
 const main_url = process.env.REACT_APP_BACKEND_URL;
@@ -38,11 +35,7 @@ const VideoCard = ({ video }) => {
   const [newPlaylistName, setNewPlaylistName] = useState("");
   const { playlists } = useSelector(videoSelector);
 
-  const saveVideo = () => {
-    console.log();
-    // setSaving(true)/
-  };
-
+  /* CREATE NEW PLAYLIST */
   const createNewPlaylist = async (name) => {
     if (!name.length) {
       return;
@@ -88,6 +81,7 @@ const VideoCard = ({ video }) => {
     }
   };
 
+  /* ADD TO OR REMOVE VIDEO FROM PLAYLIST */
   const addToOrRemoveFromPlaylist = async (e, id) => {
     if (!e.target.checked) {
       // which means the checkbox has been unchecked just now
@@ -164,6 +158,76 @@ const VideoCard = ({ video }) => {
     }
   };
 
+  /* SAVE OR UNSAVE A VIDEO */
+
+  const saveVideo = async () => {
+    const url = `${main_url}/save/${getUser().username}`;
+    let videoData = {
+      _id: video._id,
+      category: video.category,
+      url: video.url,
+      title: video.title,
+      description: video.description,
+      channel: video.channel,
+    };
+
+    setSaving(true);
+
+    try {
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${getUser().token}`,
+        },
+        body: JSON.stringify({
+          video: videoData,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        dispatch(setPlaylists(data.playlists));
+        setSaving(false);
+      } else {
+        setSaving(false);
+        console.log(data.message);
+      }
+    } catch (err) {
+      setSaving(false);
+      console.log(err);
+    }
+  };
+
+  const unsaveVideo = async () => {
+    const url = `${main_url}/unsave/${getUser().username}`;
+
+    setSaving(true);
+
+    try {
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${getUser().token}`,
+        },
+        body: JSON.stringify({
+          videoId: video._id,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        dispatch(setPlaylists(data.playlists));
+        setSaving(false);
+      } else {
+        setSaving(false);
+        console.log(data.message);
+      }
+    } catch (err) {
+      setSaving(false);
+      console.log(err);
+    }
+  };
+
   return (
     <div className="video-card">
       <img
@@ -187,6 +251,16 @@ const VideoCard = ({ video }) => {
         <div style={{ flexGrow: "1" }}></div>
         {saving ? (
           <Spinner />
+        ) : isSaved(playlists, video._id) ? (
+          <MdBookmark
+            onClick={() => {
+              if (isAuthenticated()) {
+                unsaveVideo(video);
+              } else {
+                window.alert("Not authenticated");
+              }
+            }}
+          />
         ) : (
           <MdBookmarkBorder
             onClick={() => {

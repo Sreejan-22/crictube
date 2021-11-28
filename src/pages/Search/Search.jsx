@@ -5,8 +5,6 @@ import VideoCard from "../../components/VideoCard/VideoCard";
 import { Input, InputGroup, InputRightAddon } from "@chakra-ui/input";
 import { useToast } from "@chakra-ui/react";
 import { GoSearch } from "react-icons/go";
-import { MdBookmark, MdPlaylistAdd, MdBookmarkBorder } from "react-icons/md";
-import { getImgUrl } from "../../utils/getImgUrl";
 import "./Search.css";
 import { isAuthenticated, getUser } from "../../utils/auth";
 
@@ -34,7 +32,7 @@ const Search = () => {
     try {
       const url = isAuthenticated()
         ? `${main_url}/searchuservideos?query=${query}`
-        : `${url}/search?query=${query}`;
+        : `${main_url}/search?query=${query}`;
 
       const headers = isAuthenticated()
         ? {
