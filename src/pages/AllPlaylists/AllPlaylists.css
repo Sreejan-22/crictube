@@ -33,3 +33,9 @@
 .playlist-link:hover {
   text-decoration: underline;
 }
+
+.playlist > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
