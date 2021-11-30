@@ -4,7 +4,6 @@ const initialState = {
   allVideos: [],
   currVideos: [],
   playlists: [],
-  currPlaylist: null,
 };
 
 const videoSlice = createSlice({
@@ -23,16 +22,11 @@ const videoSlice = createSlice({
     setPlaylists: (state, { payload }) => {
       state.playlists = payload;
     },
-    setCurrPlaylist: (state, { payload }) => {
-      state.playlists = payload.playlists;
-      state.currPlaylist = payload.currPlaylist;
-    },
   },
 });
 
 // actions
-export const { setUserData, setVideos, setPlaylists, setCurrPlaylist } =
-  videoSlice.actions;
+export const { setUserData, setVideos, setPlaylists } = videoSlice.actions;
 
 // selector
 export const videoSelector = (state) => state.video;

@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  videoSelector,
+  setVideos,
+  setUserData,
+} from "../../slices/video.slice";
 import Layout from "../../components/Layout/Layout";
 import VideoCard from "../../components/VideoCard/VideoCard";
 import { Input, InputGroup, InputRightAddon } from "@chakra-ui/input";
@@ -11,11 +16,10 @@ import { isAuthenticated, getUser } from "../../utils/auth";
 const main_url = process.env.REACT_APP_BACKEND_URL;
 
 const Search = () => {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [videos, setVideos] = useState([]);
-  const [playlists, setPlaylists] = useState([]);
   const [searchquery, setSearchquery] = useState("");
+  const dispatch = useDispatch();
+  const { playlists, currVideos } = useSelector(videoSelector);
   const toast = useToast();
 
   const showToast = (title) => {
@@ -45,9 +49,9 @@ const Search = () => {
       const res = await fetch(url, { headers: headers });
       const data = await res.json();
       if (data.success) {
-        const temp = isAuthenticated() ? data.results.allVideos : data.videos;
-        console.log(data);
-        setVideos(temp);
+        dispatch(
+          setUserData({ videos: data.videos, playlists: data.playlists })
+        );
         setLoading(false);
       } else {
         setLoading(false);
@@ -55,7 +59,7 @@ const Search = () => {
       }
     } catch (err) {
       setLoading(false);
-      showToast("Failed to fetch search results");
+      showToast("Something went wrong");
     }
   };
 
@@ -92,16 +96,10 @@ const Search = () => {
           >
             Loading search results...
           </h1>
-        ) : videos.length ? (
+        ) : currVideos.length ? (
           <div className="video-container">
-            {videos.map((item) => (
-              <VideoCard
-                item={isAuthenticated() ? item.videoId : item}
-                playlists={playlists}
-                // setPlaylists={setPlaylists}
-                playlistsIncluded={isAuthenticated() ? item.playlists : []}
-                key={item._id}
-              />
+            {currVideos.map((item) => (
+              <VideoCard video={item} key={item._id} showToast={showToast} />
             ))}
           </div>
         ) : null}

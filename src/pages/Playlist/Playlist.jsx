@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Layout from "../../components/Layout/Layout";
 import VideoCard from "../../components/VideoCard/VideoCard";
+import { useToast } from "@chakra-ui/toast";
 import { useDispatch, useSelector } from "react-redux";
-import { videoSelector, setCurrPlaylist } from "../../slices/video.slice";
+import { videoSelector, setPlaylists } from "../../slices/video.slice";
 import { getUser } from "../../utils/auth";
 import "./Playlist.css";
 
@@ -12,14 +13,25 @@ const main_url = process.env.REACT_APP_BACKEND_URL;
 const Playlist = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { playlists, currPlaylist } = useSelector(videoSelector);
-  const [loading, setLoading] = useState(false);
+  const { playlists } = useSelector(videoSelector);
+  const [loading, setLoading] = useState(true);
+  const toast = useToast();
+
+  const showToast = (title, status = "error") => {
+    toast({
+      title,
+      status,
+      duration: 4000,
+      position: "top-right",
+      isClosable: true,
+    });
+  };
 
   useEffect(() => {
     async function load() {
-      const url = `${main_url}/singleplaylist/${id}`;
+      const url = `${main_url}/singleplaylist/${getUser().username}/${id}`;
 
-      setLoading(true);
+      // setLoading(true);
       try {
         const res = await fetch(url, {
           headers: {
@@ -29,25 +41,22 @@ const Playlist = () => {
         });
         const data = await res.json();
         if (data.success) {
-          dispatch(
-            setCurrPlaylist({
-              playlists: data.playlists,
-              currPlaylist: data.currPlaylist,
-            })
-          );
+          dispatch(setPlaylists(data.playlists));
           setLoading(false);
         } else {
           setLoading(false);
-          console.log(data.message);
+          showToast(data.message);
         }
       } catch (err) {
         setLoading(false);
-        console.log(err);
+        showToast("Something went wrong");
       }
     }
 
     load();
-  }, []);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, id]);
 
   return (
     <Layout>
@@ -57,12 +66,16 @@ const Playlist = () => {
         </h1>
       ) : (
         <>
-          <h1 className="h1-style">{currPlaylist.name}</h1>
+          <h1 className="h1-style">
+            {playlists.find((item) => item._id === id).name}
+          </h1>
           <br />
           <div className="playlist-video-container">
-            {currPlaylist.videos.map((item) => (
-              <VideoCard video={item} key={item._id} />
-            ))}
+            {playlists
+              .find((item) => item._id === id)
+              .videos.map((item) => (
+                <VideoCard video={item} key={item._id} />
+              ))}
           </div>
         </>
       )}

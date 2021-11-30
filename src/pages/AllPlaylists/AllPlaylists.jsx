@@ -57,10 +57,11 @@ const AllPlaylists = () => {
   }, []);
 
   const deletePlaylist = async (id) => {
-    const url = `${main_url}/playlists/${id}`;
+    const url = `${main_url}/playlists/${getUser().username}/${id}`;
 
     try {
       const res = await fetch(url, {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getUser().token}`,
@@ -68,6 +69,8 @@ const AllPlaylists = () => {
       });
       const data = await res.json();
       if (data.success) {
+        dispatch(setPlaylists(data.playlists));
+        showToast(data.message, "info");
       } else {
         showToast(data.message, "error");
       }
@@ -109,7 +112,6 @@ const AllPlaylists = () => {
                       <div>
                         <Link
                           to={`/playlist/${playlist._id}`}
-                          state={{ playlist }}
                           className="playlist-link"
                         >
                           View Playlist

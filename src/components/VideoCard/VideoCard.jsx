@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { videoSelector, setPlaylists } from "../../slices/video.slice";
 import {
@@ -25,8 +25,9 @@ import "./VideoCard.css";
 
 const main_url = process.env.REACT_APP_BACKEND_URL;
 
-const VideoCard = ({ video }) => {
+const VideoCard = ({ video, showToast }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
@@ -72,12 +73,11 @@ const VideoCard = ({ video }) => {
         setLoading(false);
       } else {
         setLoading(false);
-        alert(data.message);
+        showToast(data.message);
       }
     } catch (err) {
       setLoading(false);
-      console.log(err);
-      alert("Something went wrong");
+      showToast("Something went wrong");
     }
   };
 
@@ -104,16 +104,18 @@ const VideoCard = ({ video }) => {
         });
         const data = await res.json();
         if (data.success) {
+          if (location.pathname.includes("/playlist/")) {
+            onClose();
+          }
           dispatch(setPlaylists(data.playlists));
           setLoading2(false);
         } else {
           setLoading2(false);
-          alert(data.message);
+          showToast(data.message);
         }
       } catch (err) {
         setLoading2(false);
-        console.log(err);
-        alert("Something went wrong");
+        showToast("Something went wrong");
       }
     } else {
       // which means the checkbox has been checked just now
@@ -148,12 +150,11 @@ const VideoCard = ({ video }) => {
           setLoading2(false);
         } else {
           setLoading2(false);
-          alert(data.message);
+          showToast(data.message);
         }
       } catch (err) {
         setLoading2(false);
-        console.log(err);
-        alert("Something went wrong");
+        showToast("Something went wrong");
       }
     }
   };
@@ -190,11 +191,11 @@ const VideoCard = ({ video }) => {
         setSaving(false);
       } else {
         setSaving(false);
-        console.log(data.message);
+        showToast(data.message);
       }
     } catch (err) {
       setSaving(false);
-      console.log(err);
+      showToast("Something went wrong");
     }
   };
 

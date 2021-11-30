@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { videoSelector, setUserData, setVideos } from "../slices/video.slice";
 import Layout from "../components/Layout/Layout";
 import VideoCard from "../components/VideoCard/VideoCard";
+import { useToast } from "@chakra-ui/toast";
 import { isAuthenticated, getUser } from "../utils/auth";
 import "./Home.css";
 
@@ -13,6 +14,17 @@ const Home = () => {
   const [active, setActive] = useState("all");
   const dispatch = useDispatch();
   const { allVideos, currVideos } = useSelector(videoSelector);
+  const toast = useToast();
+
+  const showToast = (title, status = "error") => {
+    toast({
+      title,
+      status,
+      duration: 4000,
+      position: "top-right",
+      isClosable: true,
+    });
+  };
 
   useEffect(() => {
     async function load() {
@@ -33,24 +45,23 @@ const Home = () => {
         const res = await fetch(url, { headers: headers });
         const data = await res.json();
         if (data.success) {
-          console.log(data);
           dispatch(
             setUserData({ videos: data.videos, playlists: data.playlists })
           );
           setLoading(false);
         } else {
           setLoading(false);
-          console.log(data.message);
+          showToast(data.message);
         }
       } catch (err) {
         setLoading(false);
-        console.log(err);
+        showToast("Something went wrong");
       }
     }
 
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   return (
     <Layout>
@@ -119,7 +130,11 @@ const Home = () => {
               </div>
               <div className="video-container">
                 {currVideos.map((item) => (
-                  <VideoCard video={item} key={item._id} />
+                  <VideoCard
+                    video={item}
+                    showToast={showToast}
+                    key={item._id}
+                  />
                 ))}
               </div>
             </div>

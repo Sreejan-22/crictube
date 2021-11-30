@@ -8,6 +8,7 @@ import {
 } from "../../slices/video.slice";
 import Layout from "../../components/Layout/Layout";
 import VideoCard from "../../components/VideoCard/VideoCard";
+import { useToast } from "@chakra-ui/toast";
 import { MdBookmark, MdPlaylistAdd, MdBookmarkBorder } from "react-icons/md";
 import { isAuthenticated, getUser } from "../../utils/auth";
 import "./VideoDetails.css";
@@ -19,9 +20,19 @@ const Video = () => {
   const video = location.state.video;
 
   const [loading, setLoading] = useState(false);
-  // const [videos, setVideos] = useState([]);
   const dispatch = useDispatch();
   const { currVideos } = useSelector(videoSelector);
+  const toast = useToast();
+
+  const showToast = (title, status = "error") => {
+    toast({
+      title,
+      status,
+      duration: 4000,
+      position: "top-right",
+      isClosable: true,
+    });
+  };
 
   useEffect(() => {
     async function load() {
@@ -52,11 +63,11 @@ const Video = () => {
           setLoading(false);
         } else {
           setLoading(false);
-          alert(data.message);
+          showToast(data.message);
         }
       } catch (err) {
         setLoading(false);
-        console.log(err);
+        showToast("Something went wrong");
       }
     }
 
