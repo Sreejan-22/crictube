@@ -104,3 +104,19 @@
   color: #b6b8c7;
   cursor: pointer;
 }
+
+@media screen and (max-width: 767px) {
+  .blank-space {
+    width: 100%;
+    top: 70px;
+  }
+
+  .tags-container {
+    top: 90px;
+  }
+
+  .tag {
+    font-size: 0.7rem;
+    margin-right: 0.5rem;
+  }
+}
