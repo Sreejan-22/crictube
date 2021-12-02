@@ -19,7 +19,7 @@ const Search = () => {
   const [loading, setLoading] = useState(false);
   const [searchquery, setSearchquery] = useState("");
   const dispatch = useDispatch();
-  const { playlists, currVideos } = useSelector(videoSelector);
+  const { currVideos } = useSelector(videoSelector);
   const toast = useToast();
 
   const showToast = (title) => {

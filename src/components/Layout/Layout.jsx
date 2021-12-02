@@ -71,6 +71,7 @@ const Layout = ({ children }) => {
         </div>
       </div>
       <div className="top-bar">
+        <div className="logo-sm">Crictube</div>
         <div className="top-bar-space"></div>
         {isAuthenticated() ? (
           <div
@@ -96,6 +97,26 @@ const Layout = ({ children }) => {
             </Link>
           </>
         )}
+      </div>
+      <div className="bottom-bar-container-sm">
+        <div className="bottom-bar-sm">
+          <div className="bottom-bar-item bottom-sidebar-active">
+            <MdHome />
+            <span>Home</span>
+          </div>
+          <div className="bottom-bar-item">
+            <FiSearch />
+            <span>Search</span>
+          </div>
+          <div className="bottom-bar-item">
+            <MdBookmark />
+            <span>Saved</span>
+          </div>
+          <div className="bottom-bar-item">
+            <MdVideoLibrary />
+            <span>Playlists</span>
+          </div>
+        </div>
       </div>
       <div className="main-content">{children}</div>
     </div>
