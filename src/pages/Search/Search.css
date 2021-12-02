@@ -1,6 +1,10 @@
 .search-section {
+  position: sticky;
+  top: 100px;
   display: flex;
   justify-content: center;
+  background-color: black;
+  padding-bottom: 2rem;
 }
 
 .search-wrapper {
@@ -22,5 +26,11 @@
 @media screen and (max-width: 768px) {
   .search-wrapper {
     width: 90%;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .search-section {
+    top: 90px;
   }
 }

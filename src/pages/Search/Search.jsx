@@ -65,6 +65,7 @@ const Search = () => {
 
   return (
     <Layout>
+      <div className="blank-space"></div>
       <div className="search-container">
         <div className="search-section">
           <div className="search-wrapper">
@@ -87,8 +88,6 @@ const Search = () => {
             </InputGroup>
           </div>
         </div>
-        <br />
-        <br />
         {/* <div className="searched-videos"></div> */}
         {loading ? (
           <h1

@@ -118,6 +118,10 @@
     grid-template-columns: 1fr;
   }
 
+  .container::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
+  }
+
   .top-bar {
     left: 0px;
     width: 100vw;
