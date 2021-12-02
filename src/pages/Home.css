@@ -119,4 +119,8 @@
     font-size: 0.7rem;
     margin-right: 0.5rem;
   }
+
+  .video-container {
+    grid-auto-rows: minmax(200px, auto);
+  }
 }

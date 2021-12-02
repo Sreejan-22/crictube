@@ -100,22 +100,46 @@ const Layout = ({ children }) => {
       </div>
       <div className="bottom-bar-container-sm">
         <div className="bottom-bar-sm">
-          <div className="bottom-bar-item bottom-sidebar-active">
+          <Link
+            to="/"
+            className={`bottom-bar-item ${
+              active === "home" ? "bottom-sidebar-active" : ""
+            }`}
+            onMouseDown={() => setActive("home")}
+          >
             <MdHome />
             <span>Home</span>
-          </div>
-          <div className="bottom-bar-item">
+          </Link>
+          <Link
+            to="/search"
+            className={`bottom-bar-item ${
+              active === "search" ? "bottom-sidebar-active" : ""
+            }`}
+            onMouseDown={() => setActive("search")}
+          >
             <FiSearch />
             <span>Search</span>
-          </div>
-          <div className="bottom-bar-item">
+          </Link>
+          <Link
+            to="/playlists/saved"
+            className={`bottom-bar-item ${
+              active === "saved" ? "bottom-sidebar-active" : ""
+            }`}
+            onMouseDown={() => setActive("saved")}
+          >
             <MdBookmark />
             <span>Saved</span>
-          </div>
-          <div className="bottom-bar-item">
+          </Link>
+          <Link
+            to="/allplaylists"
+            className={`bottom-bar-item ${
+              active === "playlists" ? "bottom-sidebar-active" : ""
+            }`}
+            onMouseDown={() => setActive("playlists")}
+          >
             <MdVideoLibrary />
             <span>Playlists</span>
-          </div>
+          </Link>
         </div>
       </div>
       <div className="main-content">{children}</div>
