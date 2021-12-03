@@ -71,7 +71,9 @@ const Layout = ({ children }) => {
         </div>
       </div>
       <div className="top-bar">
-        <div className="logo-sm">Crictube</div>
+        <Link to="/" className="logo-sm">
+          Crictube
+        </Link>
         <div className="top-bar-space"></div>
         {isAuthenticated() ? (
           <div

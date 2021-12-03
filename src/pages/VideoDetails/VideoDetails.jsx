@@ -108,6 +108,7 @@ const Video = () => {
             <hr style={{ borderColor: "gray" }} />
             <h4>{video.description}</h4>
           </div>
+          <h2 className="other-videos-heading-sm">Similar Videos</h2>
           <div className="other-videos-container">
             <h2>Similar Videos</h2>
             {currVideos.map((item) => (
