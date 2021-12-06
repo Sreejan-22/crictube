@@ -22,11 +22,17 @@ const videoSlice = createSlice({
     setPlaylists: (state, { payload }) => {
       state.playlists = payload;
     },
+    setVideosAndPlaylists: (state, { payload }) => {
+      const { videos, playlists } = payload;
+      state.currVideos = videos;
+      state.playlists = playlists;
+    },
   },
 });
 
 // actions
-export const { setUserData, setVideos, setPlaylists } = videoSlice.actions;
+export const { setUserData, setVideos, setPlaylists, setVideosAndPlaylists } =
+  videoSlice.actions;
 
 // selector
 export const videoSelector = (state) => state.video;

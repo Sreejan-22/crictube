@@ -2,19 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { videoSelector, setPlaylists } from "../../slices/video.slice";
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
-  Button,
-  Input,
-  Checkbox,
-  Stack,
-  useDisclosure,
-} from "@chakra-ui/react";
+import AddToPlaylistModal from "../AddToPlaylistModal/AddToPlaylistModal";
+import { useDisclosure } from "@chakra-ui/react";
 import { Spinner } from "@chakra-ui/spinner";
 import { MdBookmark, MdPlaylistAdd, MdBookmarkBorder } from "react-icons/md";
 import { getImgUrl } from "../../utils/getImgUrl";
@@ -29,8 +18,8 @@ const VideoCard = ({ video, showToast }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [saving, setSaving] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [loading2, setLoading2] = useState(false);
+  const [newPlaylistLoading, setNewPlaylistLoading] = useState(false);
+  const [addPlaylistLoading, setAddPlaylistLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   const [newPlaylistName, setNewPlaylistName] = useState("");
@@ -53,7 +42,7 @@ const VideoCard = ({ video, showToast }) => {
     };
 
     setNewPlaylistName("");
-    setLoading(true);
+    setNewPlaylistLoading(true);
 
     try {
       const res = await fetch(url, {
@@ -70,13 +59,13 @@ const VideoCard = ({ video, showToast }) => {
       const data = await res.json();
       if (data.success) {
         dispatch(setPlaylists(data.playlists));
-        setLoading(false);
+        setNewPlaylistLoading(false);
       } else {
-        setLoading(false);
+        setNewPlaylistLoading(false);
         showToast(data.message);
       }
     } catch (err) {
-      setLoading(false);
+      setNewPlaylistLoading(false);
       showToast("Something went wrong");
     }
   };
@@ -88,7 +77,7 @@ const VideoCard = ({ video, showToast }) => {
       // so remove the video from playlist
       const url = `${main_url}/playlists/remove/${getUser().username}`;
 
-      setLoading2(true);
+      setAddPlaylistLoading(true);
 
       try {
         const res = await fetch(url, {
@@ -108,13 +97,13 @@ const VideoCard = ({ video, showToast }) => {
             onClose();
           }
           dispatch(setPlaylists(data.playlists));
-          setLoading2(false);
+          setAddPlaylistLoading(false);
         } else {
-          setLoading2(false);
+          setAddPlaylistLoading(false);
           showToast(data.message);
         }
       } catch (err) {
-        setLoading2(false);
+        setAddPlaylistLoading(false);
         showToast("Something went wrong");
       }
     } else {
@@ -130,7 +119,7 @@ const VideoCard = ({ video, showToast }) => {
         channel: video.channel,
       };
 
-      setLoading2(true);
+      setAddPlaylistLoading(true);
 
       try {
         const res = await fetch(url, {
@@ -147,13 +136,13 @@ const VideoCard = ({ video, showToast }) => {
         const data = await res.json();
         if (data.success) {
           dispatch(setPlaylists(data.playlists));
-          setLoading2(false);
+          setAddPlaylistLoading(false);
         } else {
-          setLoading2(false);
+          setAddPlaylistLoading(false);
           showToast(data.message);
         }
       } catch (err) {
-        setLoading2(false);
+        setAddPlaylistLoading(false);
         showToast("Something went wrong");
       }
     }
@@ -286,58 +275,19 @@ const VideoCard = ({ video, showToast }) => {
         />
         &nbsp;&nbsp;
       </div>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Add to playlist</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Stack>
-              {isAuthenticated()
-                ? playlists
-                    .filter((playlist) => playlist.name !== "Saved")
-                    .map((playlist) => (
-                      <Checkbox
-                        key={playlist._id}
-                        isChecked={isIncludedInArray(
-                          playlist.videos,
-                          video._id
-                        )}
-                        isDisabled={loading2}
-                        onChange={(e) => {
-                          e.preventDefault();
-                          addToOrRemoveFromPlaylist(e, playlist._id);
-                          // console.log(e.target.checked);
-                        }}
-                      >
-                        {playlist.name}
-                      </Checkbox>
-                    ))
-                : null}
-              <br />
-              {loading2 ? (
-                <>
-                  <Spinner />
-                  <br />
-                </>
-              ) : null}
-              <Input
-                placeholder="Enter playlist name"
-                onChange={(e) => setNewPlaylistName(e.target.value)}
-                isDisabled={loading}
-              />
-              <Button
-                colorScheme="blue"
-                isLoading={loading}
-                onClick={() => createNewPlaylist(newPlaylistName)}
-              >
-                Create new playlist
-              </Button>
-            </Stack>
-            <br />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+      <AddToPlaylistModal
+        isOpen={isOpen}
+        onClose={onClose}
+        video={video}
+        playlists={playlists}
+        newPlaylistLoading={newPlaylistLoading}
+        addPlaylistLoading={addPlaylistLoading}
+        isIncludedInArray={isIncludedInArray}
+        addToOrRemoveFromPlaylist={addToOrRemoveFromPlaylist}
+        newPlaylistName={newPlaylistName}
+        setNewPlaylistName={setNewPlaylistName}
+        createNewPlaylist={createNewPlaylist}
+      />
     </div>
   );
 };

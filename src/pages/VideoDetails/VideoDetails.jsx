@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  videoSelector,
-  setVideos,
-  setPlaylists,
-} from "../../slices/video.slice";
+import { videoSelector, setVideosAndPlaylists } from "../../slices/video.slice";
 import Layout from "../../components/Layout/Layout";
 import VideoCard from "../../components/VideoCard/VideoCard";
 import { useToast } from "@chakra-ui/toast";
@@ -56,10 +52,12 @@ const Video = () => {
         const data = await res.json();
 
         if (data.success) {
-          if (isAuthenticated()) {
-            dispatch(setPlaylists(data.playlists));
-          }
-          dispatch(setVideos(data.videos));
+          dispatch(
+            setVideosAndPlaylists({
+              videos: data.videos,
+              playlists: data.playlists,
+            })
+          );
           setLoading(false);
         } else {
           setLoading(false);
@@ -74,7 +72,7 @@ const Video = () => {
     load();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
+  }, [location.pathname, dispatch]);
 
   return (
     <Layout>
