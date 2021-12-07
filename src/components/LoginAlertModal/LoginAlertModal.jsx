@@ -11,7 +11,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 
-const LoginAlertModal = () => {
+const LoginAlertModal = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
 
   return (

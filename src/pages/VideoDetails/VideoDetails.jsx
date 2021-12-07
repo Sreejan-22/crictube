@@ -84,8 +84,6 @@ const Video = () => {
         <div className="single-video-container">
           <div className="iframe-container">
             <iframe
-              // width="560"
-              // height="315"
               src={video.url}
               title="YouTube video player"
               frameBorder="0"
@@ -100,8 +98,25 @@ const Video = () => {
             </p>
             <div className="single-video-icons">
               <div style={{ flexGrow: "1" }}></div>
-              <MdBookmarkBorder />
-              <MdPlaylistAdd style={{ marginLeft: "1rem" }} />
+              <MdBookmarkBorder
+                onClick={() => {
+                  if (isAuthenticated()) {
+                    console.log("bookmark");
+                  } else {
+                    showToast("You need to be logged in", "info");
+                  }
+                }}
+              />
+              <MdPlaylistAdd
+                style={{ marginLeft: "1rem" }}
+                onClick={() => {
+                  if (isAuthenticated()) {
+                    console.log("add to playlist");
+                  } else {
+                    showToast("You need to be logged in", "info");
+                  }
+                }}
+              />
             </div>
             <hr style={{ borderColor: "gray" }} />
             <h4>{video.description}</h4>

@@ -1,14 +1,19 @@
 import { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { videoSelector, setPlaylists } from "../../slices/video.slice";
+import {
+  videoSelector,
+  setPlaylists,
+  createNewPlaylistFunc,
+  addToPlaylist,
+  removeFromPlaylist,
+} from "../../slices/video.slice";
 import AddToPlaylistModal from "../AddToPlaylistModal/AddToPlaylistModal";
 import { useDisclosure } from "@chakra-ui/react";
 import { Spinner } from "@chakra-ui/spinner";
 import { MdBookmark, MdPlaylistAdd, MdBookmarkBorder } from "react-icons/md";
 import { getImgUrl } from "../../utils/getImgUrl";
 import { isAuthenticated, getUser } from "../../utils/auth";
-import { isIncludedInArray } from "../../utils/isIncludedInArray";
 import { isSaved } from "../../utils/isSaved";
 import "./VideoCard.css";
 
@@ -16,10 +21,7 @@ const main_url = process.env.REACT_APP_BACKEND_URL;
 
 const VideoCard = ({ video, showToast }) => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [saving, setSaving] = useState(false);
-  const [newPlaylistLoading, setNewPlaylistLoading] = useState(false);
-  const [addPlaylistLoading, setAddPlaylistLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   const [newPlaylistName, setNewPlaylistName] = useState("");
@@ -42,32 +44,7 @@ const VideoCard = ({ video, showToast }) => {
     };
 
     setNewPlaylistName("");
-    setNewPlaylistLoading(true);
-
-    try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${getUser().token}`,
-        },
-        body: JSON.stringify({
-          video: videoData,
-          name: playlistName,
-        }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        dispatch(setPlaylists(data.playlists));
-        setNewPlaylistLoading(false);
-      } else {
-        setNewPlaylistLoading(false);
-        showToast(data.message);
-      }
-    } catch (err) {
-      setNewPlaylistLoading(false);
-      showToast("Something went wrong");
-    }
+    dispatch(createNewPlaylistFunc(url, videoData, playlistName, showToast));
   };
 
   /* ADD TO OR REMOVE VIDEO FROM PLAYLIST */
@@ -77,35 +54,7 @@ const VideoCard = ({ video, showToast }) => {
       // so remove the video from playlist
       const url = `${main_url}/playlists/remove/${getUser().username}`;
 
-      setAddPlaylistLoading(true);
-
-      try {
-        const res = await fetch(url, {
-          method: "PUT",
-          headers: {
-            "Content-type": "application/json",
-            Authorization: `Bearer ${getUser().token}`,
-          },
-          body: JSON.stringify({
-            videoId: video._id,
-            playlistId: id,
-          }),
-        });
-        const data = await res.json();
-        if (data.success) {
-          if (location.pathname.includes("/playlist/")) {
-            onClose();
-          }
-          dispatch(setPlaylists(data.playlists));
-          setAddPlaylistLoading(false);
-        } else {
-          setAddPlaylistLoading(false);
-          showToast(data.message);
-        }
-      } catch (err) {
-        setAddPlaylistLoading(false);
-        showToast("Something went wrong");
-      }
+      dispatch(removeFromPlaylist(url, id, video, showToast));
     } else {
       // which means the checkbox has been checked just now
       // so add the video from playlist
@@ -119,32 +68,7 @@ const VideoCard = ({ video, showToast }) => {
         channel: video.channel,
       };
 
-      setAddPlaylistLoading(true);
-
-      try {
-        const res = await fetch(url, {
-          method: "PUT",
-          headers: {
-            "Content-type": "application/json",
-            Authorization: `Bearer ${getUser().token}`,
-          },
-          body: JSON.stringify({
-            id,
-            video: videoData,
-          }),
-        });
-        const data = await res.json();
-        if (data.success) {
-          dispatch(setPlaylists(data.playlists));
-          setAddPlaylistLoading(false);
-        } else {
-          setAddPlaylistLoading(false);
-          showToast(data.message);
-        }
-      } catch (err) {
-        setAddPlaylistLoading(false);
-        showToast("Something went wrong");
-      }
+      dispatch(addToPlaylist(url, id, videoData, showToast));
     }
   };
 
@@ -280,9 +204,6 @@ const VideoCard = ({ video, showToast }) => {
         onClose={onClose}
         video={video}
         playlists={playlists}
-        newPlaylistLoading={newPlaylistLoading}
-        addPlaylistLoading={addPlaylistLoading}
-        isIncludedInArray={isIncludedInArray}
         addToOrRemoveFromPlaylist={addToOrRemoveFromPlaylist}
         newPlaylistName={newPlaylistName}
         setNewPlaylistName={setNewPlaylistName}

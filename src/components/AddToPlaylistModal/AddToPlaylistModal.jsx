@@ -1,3 +1,5 @@
+import { useDispatch, useSelector } from "react-redux";
+import { videoSelector, setPlaylists } from "../../slices/video.slice";
 import {
   Modal,
   ModalOverlay,
@@ -12,20 +14,21 @@ import {
 } from "@chakra-ui/react";
 import { Spinner } from "@chakra-ui/spinner";
 import { isAuthenticated } from "../../utils/auth";
+import { isIncludedInArray } from "../../utils/isIncludedInArray";
 
 const AddToPlaylistModal = ({
   isOpen,
   onClose,
   video,
-  playlists,
-  newPlaylistLoading,
-  addPlaylistLoading,
-  isIncludedInArray,
   addToOrRemoveFromPlaylist,
   newPlaylistName,
   setNewPlaylistName,
   createNewPlaylist,
 }) => {
+  const dispatch = useDispatch();
+  const { playlists, newPlaylistLoading, addPlaylistLoading } =
+    useSelector(videoSelector);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
