@@ -1,5 +1,6 @@
-import { useDispatch, useSelector } from "react-redux";
-import { videoSelector, setPlaylists } from "../../slices/video.slice";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { videoSelector } from "../../slices/video.slice";
 import {
   Modal,
   ModalOverlay,
@@ -21,11 +22,9 @@ const AddToPlaylistModal = ({
   onClose,
   video,
   addToOrRemoveFromPlaylist,
-  newPlaylistName,
-  setNewPlaylistName,
   createNewPlaylist,
 }) => {
-  const dispatch = useDispatch();
+  const [newPlaylistName, setNewPlaylistName] = useState("");
   const { playlists, newPlaylistLoading, addPlaylistLoading } =
     useSelector(videoSelector);
 
@@ -63,13 +62,21 @@ const AddToPlaylistModal = ({
             ) : null}
             <Input
               placeholder="Enter playlist name"
+              value={newPlaylistName}
               onChange={(e) => setNewPlaylistName(e.target.value)}
               isDisabled={newPlaylistLoading}
             />
             <Button
               colorScheme="blue"
               isLoading={newPlaylistLoading}
-              onClick={() => createNewPlaylist(newPlaylistName)}
+              onClick={() => {
+                const name = newPlaylistName;
+                if (!name.length) {
+                  return;
+                }
+                setNewPlaylistName("");
+                createNewPlaylist(name);
+              }}
             >
               Create new playlist
             </Button>

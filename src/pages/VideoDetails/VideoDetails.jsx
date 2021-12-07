@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { videoSelector, setVideosAndPlaylists } from "../../slices/video.slice";
 import Layout from "../../components/Layout/Layout";
 import VideoCard from "../../components/VideoCard/VideoCard";
+import { Spinner } from "@chakra-ui/spinner";
 import { useToast } from "@chakra-ui/toast";
 import { MdBookmark, MdPlaylistAdd, MdBookmarkBorder } from "react-icons/md";
 import { isAuthenticated, getUser } from "../../utils/auth";
@@ -14,11 +15,19 @@ const main_url = process.env.REACT_APP_BACKEND_URL;
 const Video = () => {
   const location = useLocation();
   const video = location.state.video;
-
   const [loading, setLoading] = useState(false);
+  const [wait, setWait] = useState(false);
   const dispatch = useDispatch();
   const { currVideos } = useSelector(videoSelector);
   const toast = useToast();
+  const videoData = {
+    _id: video._id,
+    category: video.category,
+    url: video.url,
+    title: video.title,
+    description: video.description,
+    channel: video.channel,
+  };
 
   const showToast = (title, status = "error") => {
     toast({
@@ -73,6 +82,18 @@ const Video = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, dispatch]);
+
+  /* CREATE NEW PLAYLIST */
+  // const createNewPlaylist = async (name) => {
+  //   if (!name.length) {
+  //     return;
+  //   }
+  //   const playlistName = name;
+  //   const url = `${main_url}/playlists/${getUser().username}`;
+
+  //   setNewPlaylistName("");
+  //   dispatch(createNewPlaylistFunc(url, videoData, playlistName, showToast));
+  // };
 
   return (
     <Layout>

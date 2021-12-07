@@ -24,26 +24,21 @@ const VideoCard = ({ video, showToast }) => {
   const [saving, setSaving] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
-  const [newPlaylistName, setNewPlaylistName] = useState("");
   const { playlists } = useSelector(videoSelector);
+  const videoData = {
+    _id: video._id,
+    category: video.category,
+    url: video.url,
+    title: video.title,
+    description: video.description,
+    channel: video.channel,
+  };
 
   /* CREATE NEW PLAYLIST */
-  const createNewPlaylist = async (name) => {
-    if (!name.length) {
-      return;
-    }
-    const playlistName = name;
+  const createNewPlaylist = async (playlistName) => {
     const url = `${main_url}/playlists/${getUser().username}`;
-    let videoData = {
-      _id: video._id,
-      category: video.category,
-      url: video.url,
-      title: video.title,
-      description: video.description,
-      channel: video.channel,
-    };
 
-    setNewPlaylistName("");
+    // setNewPlaylistName("");
     dispatch(createNewPlaylistFunc(url, videoData, playlistName, showToast));
   };
 
@@ -59,14 +54,6 @@ const VideoCard = ({ video, showToast }) => {
       // which means the checkbox has been checked just now
       // so add the video from playlist
       const url = `${main_url}/playlists/add/${getUser().username}`;
-      let videoData = {
-        _id: video._id,
-        category: video.category,
-        url: video.url,
-        title: video.title,
-        description: video.description,
-        channel: video.channel,
-      };
 
       dispatch(addToPlaylist(url, id, videoData, showToast));
     }
@@ -76,14 +63,6 @@ const VideoCard = ({ video, showToast }) => {
 
   const saveVideo = async () => {
     const url = `${main_url}/save/${getUser().username}`;
-    let videoData = {
-      _id: video._id,
-      category: video.category,
-      url: video.url,
-      title: video.title,
-      description: video.description,
-      channel: video.channel,
-    };
 
     setSaving(true);
 
@@ -203,10 +182,7 @@ const VideoCard = ({ video, showToast }) => {
         isOpen={isOpen}
         onClose={onClose}
         video={video}
-        playlists={playlists}
         addToOrRemoveFromPlaylist={addToOrRemoveFromPlaylist}
-        newPlaylistName={newPlaylistName}
-        setNewPlaylistName={setNewPlaylistName}
         createNewPlaylist={createNewPlaylist}
       />
     </div>
