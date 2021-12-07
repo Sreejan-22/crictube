@@ -1,13 +1,23 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { videoSelector, setVideosAndPlaylists } from "../../slices/video.slice";
+import {
+  videoSelector,
+  setVideosAndPlaylists,
+  setPlaylists,
+  createNewPlaylistFunc,
+  addToPlaylist,
+  removeFromPlaylist,
+} from "../../slices/video.slice";
+import AddToPlaylistModal from "../../components/AddToPlaylistModal/AddToPlaylistModal";
 import Layout from "../../components/Layout/Layout";
 import VideoCard from "../../components/VideoCard/VideoCard";
 import { Spinner } from "@chakra-ui/spinner";
 import { useToast } from "@chakra-ui/toast";
+import { useDisclosure } from "@chakra-ui/hooks";
 import { MdBookmark, MdPlaylistAdd, MdBookmarkBorder } from "react-icons/md";
 import { isAuthenticated, getUser } from "../../utils/auth";
+import { isSaved } from "../../utils/isSaved";
 import "./VideoDetails.css";
 
 const main_url = process.env.REACT_APP_BACKEND_URL;
@@ -18,7 +28,8 @@ const Video = () => {
   const [loading, setLoading] = useState(false);
   const [wait, setWait] = useState(false);
   const dispatch = useDispatch();
-  const { currVideos } = useSelector(videoSelector);
+  const { currVideos, playlists } = useSelector(videoSelector);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const videoData = {
     _id: video._id,
@@ -84,16 +95,93 @@ const Video = () => {
   }, [location.pathname, dispatch]);
 
   /* CREATE NEW PLAYLIST */
-  // const createNewPlaylist = async (name) => {
-  //   if (!name.length) {
-  //     return;
-  //   }
-  //   const playlistName = name;
-  //   const url = `${main_url}/playlists/${getUser().username}`;
+  const createNewPlaylist = async (playlistName) => {
+    const url = `${main_url}/playlists/${getUser().username}`;
 
-  //   setNewPlaylistName("");
-  //   dispatch(createNewPlaylistFunc(url, videoData, playlistName, showToast));
-  // };
+    // setNewPlaylistName("");
+    dispatch(createNewPlaylistFunc(url, videoData, playlistName, showToast));
+  };
+
+  /* ADD TO OR REMOVE VIDEO FROM PLAYLIST */
+  const addToOrRemoveFromPlaylist = async (e, id) => {
+    if (!e.target.checked) {
+      // which means the checkbox has been unchecked just now
+      // so remove the video from playlist
+      const url = `${main_url}/playlists/remove/${getUser().username}`;
+
+      dispatch(removeFromPlaylist(url, id, video, showToast));
+    } else {
+      // which means the checkbox has been checked just now
+      // so add the video from playlist
+      const url = `${main_url}/playlists/add/${getUser().username}`;
+
+      dispatch(addToPlaylist(url, id, videoData, showToast));
+    }
+  };
+
+  /* SAVE OR UNSAVE A VIDEO */
+
+  const saveVideo = async () => {
+    const url = `${main_url}/save/${getUser().username}`;
+
+    setWait(true);
+
+    try {
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${getUser().token}`,
+        },
+        body: JSON.stringify({
+          video: videoData,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        dispatch(setPlaylists(data.playlists));
+        setWait(false);
+        showToast("Video saved", "info");
+      } else {
+        setWait(false);
+        showToast(data.message);
+      }
+    } catch (err) {
+      setWait(false);
+      showToast("Something went wrong");
+    }
+  };
+
+  const unsaveVideo = async () => {
+    const url = `${main_url}/unsave/${getUser().username}`;
+
+    setWait(true);
+
+    try {
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${getUser().token}`,
+        },
+        body: JSON.stringify({
+          videoId: video._id,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        dispatch(setPlaylists(data.playlists));
+        setWait(false);
+        showToast("Video removed from saved playlist", "info");
+      } else {
+        setWait(false);
+        showToast(data.message);
+      }
+    } catch (err) {
+      setWait(false);
+      showToast(err);
+    }
+  };
 
   return (
     <Layout>
@@ -119,20 +207,35 @@ const Video = () => {
             </p>
             <div className="single-video-icons">
               <div style={{ flexGrow: "1" }}></div>
-              <MdBookmarkBorder
-                onClick={() => {
-                  if (isAuthenticated()) {
-                    console.log("bookmark");
-                  } else {
-                    showToast("You need to be logged in", "info");
-                  }
-                }}
-              />
+              {wait ? (
+                <Spinner />
+              ) : isSaved(playlists, video._id) ? (
+                <MdBookmark
+                  style={{ color: "white" }}
+                  onClick={() => {
+                    if (isAuthenticated()) {
+                      unsaveVideo();
+                    } else {
+                      showToast("You need to be logged in", "info");
+                    }
+                  }}
+                />
+              ) : (
+                <MdBookmarkBorder
+                  onClick={() => {
+                    if (isAuthenticated()) {
+                      saveVideo();
+                    } else {
+                      showToast("You need to be logged in", "info");
+                    }
+                  }}
+                />
+              )}
               <MdPlaylistAdd
                 style={{ marginLeft: "1rem" }}
                 onClick={() => {
                   if (isAuthenticated()) {
-                    console.log("add to playlist");
+                    onOpen();
                   } else {
                     showToast("You need to be logged in", "info");
                   }
@@ -149,6 +252,13 @@ const Video = () => {
               <VideoCard video={item} key={item._id} />
             ))}
           </div>
+          <AddToPlaylistModal
+            isOpen={isOpen}
+            onClose={onClose}
+            video={video}
+            addToOrRemoveFromPlaylist={addToOrRemoveFromPlaylist}
+            createNewPlaylist={createNewPlaylist}
+          />
         </div>
       )}
     </Layout>

@@ -149,7 +149,7 @@ const VideoCard = ({ video, showToast }) => {
             style={{ color: "white" }}
             onClick={() => {
               if (isAuthenticated()) {
-                unsaveVideo(video);
+                unsaveVideo();
               } else {
                 window.alert("Not authenticated");
               }
@@ -159,7 +159,7 @@ const VideoCard = ({ video, showToast }) => {
           <MdBookmarkBorder
             onClick={() => {
               if (isAuthenticated()) {
-                saveVideo(video);
+                saveVideo();
               } else {
                 window.alert("Not authenticated");
               }
