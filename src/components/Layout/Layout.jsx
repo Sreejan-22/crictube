@@ -17,10 +17,8 @@ const Layout = ({ children }) => {
       setActive("home");
     } else if (location.pathname === "/search") {
       setActive("search");
-    } else if (location.pathname.includes("/playlists")) {
-      if (location.pathname === "/playlists/saved") {
-        setActive("saved");
-      }
+    } else if (location.pathname === "/saved") {
+      setActive("saved");
     } else if (location.pathname === "/allplaylists") {
       setActive("playlists");
     }
@@ -51,7 +49,7 @@ const Layout = ({ children }) => {
             <span>Search</span>
           </Link>
           <Link
-            to="/playlists/saved"
+            to="/saved"
             className={`sidebar-option ${active === "saved" ? "active" : ""}`}
             onMouseDown={() => setActive("saved")}
           >
@@ -123,7 +121,7 @@ const Layout = ({ children }) => {
             <span>Search</span>
           </Link>
           <Link
-            to="/playlists/saved"
+            to="/saved"
             className={`bottom-bar-item ${
               active === "saved" ? "bottom-sidebar-active" : ""
             }`}

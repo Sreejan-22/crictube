@@ -5,6 +5,7 @@ const initialState = {
   allVideos: [],
   currVideos: [],
   playlists: [],
+  searchedVideos: [],
   newPlaylistLoading: false,
   addPlaylistLoading: false,
 };

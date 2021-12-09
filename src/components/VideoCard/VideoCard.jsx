@@ -81,6 +81,7 @@ const VideoCard = ({ video, showToast }) => {
       if (data.success) {
         dispatch(setPlaylists(data.playlists));
         setSaving(false);
+        showToast("Video saved", "info");
       } else {
         setSaving(false);
         showToast(data.message);
@@ -111,6 +112,7 @@ const VideoCard = ({ video, showToast }) => {
       if (data.success) {
         dispatch(setPlaylists(data.playlists));
         setSaving(false);
+        showToast("Video removed from saved playlist", "info");
       } else {
         setSaving(false);
         console.log(data.message);

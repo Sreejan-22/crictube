@@ -14,6 +14,7 @@ import Video from "./pages/VideoDetails/VideoDetails.jsx";
 import Search from "./pages/Search/Search.jsx";
 import AllPlaylists from "./pages/AllPlaylists/AllPlaylists.jsx";
 import Playlist from "./pages/Playlist/Playlist.jsx";
+import Saved from "./pages/Saved/Saved.jsx";
 import "./App.css";
 import { isAuthenticated } from "./utils/auth.js";
 
@@ -59,6 +60,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Playlist />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/saved"
+            element={
+              <PrivateRoute>
+                <Saved />
               </PrivateRoute>
             }
           />
