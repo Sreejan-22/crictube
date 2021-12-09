@@ -8,6 +8,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import Home from "./pages/Home.jsx";
 import Layout from "./components/Layout/Layout.jsx";
+import LoginNeeded from "./pages/LoginNeeded/LoginNeeded.jsx";
 import Signup from "./pages/Signup/Signup.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Video from "./pages/VideoDetails/VideoDetails.jsx";
@@ -49,11 +50,7 @@ function App() {
           <Route path="/search" element={<Search />} />
           <Route
             path="/allplaylists"
-            element={
-              <PrivateRoute>
-                <AllPlaylists />
-              </PrivateRoute>
-            }
+            element={isAuthenticated() ? <AllPlaylists /> : <LoginNeeded />}
           />
           <Route
             path="/playlist/:id"
@@ -65,11 +62,7 @@ function App() {
           />
           <Route
             path="/saved"
-            element={
-              <PrivateRoute>
-                <Saved />
-              </PrivateRoute>
-            }
+            element={isAuthenticated() ? <Saved /> : <LoginNeeded />}
           />
           <Route
             path="*"

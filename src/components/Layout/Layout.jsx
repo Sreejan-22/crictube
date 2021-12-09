@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+// import LoginAlertModal from "../LoginAlertModal/LoginAlertModal";
+// import { useDisclosure } from "@chakra-ui/hooks";
 import { MdHome, MdBookmark, MdVideoLibrary } from "react-icons/md";
 import { FiSearch } from "react-icons/fi";
 import { isAuthenticated } from "../../utils/auth";
@@ -9,6 +11,7 @@ const Layout = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [active, setActive] = useState("");
+  // const { isOpen, onOpen, onClose } = useDisclosure()
 
   // check this answer for rendering private routes or any kind of conditional routing in react router v6
 
@@ -143,6 +146,7 @@ const Layout = ({ children }) => {
         </div>
       </div>
       <div className="main-content">{children}</div>
+      {/* <LoginAlertModal isOpen={isOpen} onClose={onClose} /> */}
     </div>
   );
 };
