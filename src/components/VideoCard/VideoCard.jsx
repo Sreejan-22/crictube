@@ -153,7 +153,7 @@ const VideoCard = ({ video, showToast }) => {
               if (isAuthenticated()) {
                 unsaveVideo();
               } else {
-                window.alert("Not authenticated");
+                showToast("Login required", "info");
               }
             }}
           />
@@ -163,7 +163,7 @@ const VideoCard = ({ video, showToast }) => {
               if (isAuthenticated()) {
                 saveVideo();
               } else {
-                window.alert("Not authenticated");
+                showToast("Login required", "info");
               }
             }}
           />
@@ -174,7 +174,7 @@ const VideoCard = ({ video, showToast }) => {
             if (isAuthenticated()) {
               onOpen();
             } else {
-              alert("Not authenticated");
+              showToast("Login required", "info");
             }
           }}
         />
