@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  videoSelector,
-  setVideos,
-  setUserData,
-} from "../../slices/video.slice";
+import { videoSelector, setSearchedVideos } from "../../slices/video.slice";
 import Layout from "../../components/Layout/Layout";
 import VideoCard from "../../components/VideoCard/VideoCard";
 import { Input, InputGroup, InputRightAddon } from "@chakra-ui/input";
@@ -19,7 +15,7 @@ const Search = () => {
   const [loading, setLoading] = useState(false);
   const [searchquery, setSearchquery] = useState("");
   const dispatch = useDispatch();
-  const { currVideos } = useSelector(videoSelector);
+  const { searchedVideos } = useSelector(videoSelector);
   const toast = useToast();
 
   const showToast = (title) => {
@@ -35,7 +31,7 @@ const Search = () => {
   const search = async (query) => {
     try {
       const url = isAuthenticated()
-        ? `${main_url}/searchuservideos?query=${query}`
+        ? `${main_url}/searchuservideos/:${getUser().username}?query=${query}`
         : `${main_url}/search?query=${query}`;
 
       const headers = isAuthenticated()
@@ -49,8 +45,9 @@ const Search = () => {
       const res = await fetch(url, { headers: headers });
       const data = await res.json();
       if (data.success) {
+        console.log(data);
         dispatch(
-          setUserData({ videos: data.videos, playlists: data.playlists })
+          setSearchedVideos({ videos: data.videos, playlists: data.playlists })
         );
         setLoading(false);
       } else {
@@ -95,13 +92,16 @@ const Search = () => {
           >
             Loading search results...
           </h1>
-        ) : currVideos.length ? (
+        ) : searchedVideos.length ? (
           <div className="video-container">
-            {currVideos.map((item) => (
+            {searchedVideos.map((item) => (
               <VideoCard video={item} key={item._id} showToast={showToast} />
             ))}
           </div>
         ) : null}
+        <br />
+        <br />
+        <br />
       </div>
     </Layout>
   );

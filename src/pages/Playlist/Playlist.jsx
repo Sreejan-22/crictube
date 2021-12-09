@@ -77,6 +77,9 @@ const Playlist = () => {
                 <VideoCard video={item} key={item._id} />
               ))}
           </div>
+          <br />
+          <br />
+          <br />
         </>
       )}
     </Layout>

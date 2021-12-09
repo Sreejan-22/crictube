@@ -128,6 +128,9 @@ const AllPlaylists = () => {
                     </div>
                   ))}
               </div>
+              <br />
+              <br />
+              <br />
             </>
           ) : (
             <h1 className="h1-style">No playlists found</h1>

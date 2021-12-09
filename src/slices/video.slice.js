@@ -45,6 +45,10 @@ const videoSlice = createSlice({
       state.playlists = payload;
       state.newPlaylistLoading = false;
     },
+    setSearchedVideos: (state, { payload }) => {
+      state.searchedVideos = payload.videos;
+      state.playlists = payload.playlists;
+    },
   },
 });
 
@@ -58,6 +62,7 @@ export const {
   setAddPlaylistLoading,
   addToOrRemovFromePlaylist,
   createNewPlaylistFinish,
+  setSearchedVideos,
 } = videoSlice.actions;
 
 // selector
