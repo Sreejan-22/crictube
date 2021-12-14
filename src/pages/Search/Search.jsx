@@ -1,6 +1,11 @@
 import { useState } from "react";
+// import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { videoSelector, setSearchedVideos } from "../../slices/video.slice";
+import {
+  videoSelector,
+  setSearchedVideos,
+  // setSearchedVideosEmpty,
+} from "../../slices/video.slice";
 import Layout from "../../components/Layout/Layout";
 import VideoCard from "../../components/VideoCard/VideoCard";
 import { Input, InputGroup, InputRightAddon } from "@chakra-ui/input";
@@ -12,6 +17,7 @@ import { isAuthenticated, getUser } from "../../utils/auth";
 const main_url = process.env.REACT_APP_BACKEND_URL;
 
 const Search = () => {
+  // const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [searchquery, setSearchquery] = useState("");
   const dispatch = useDispatch();
@@ -27,6 +33,12 @@ const Search = () => {
       isClosable: true,
     });
   };
+
+  // useEffect(() => {
+  //   if (location.pathname !== "/search") {
+  //     dispatch(setSearchedVideosEmpty());
+  //   }
+  // }, [dispatch, location.pathname]);
 
   const search = async (query) => {
     try {
@@ -45,7 +57,6 @@ const Search = () => {
       const res = await fetch(url, { headers: headers });
       const data = await res.json();
       if (data.success) {
-        console.log(data);
         dispatch(
           setSearchedVideos({ videos: data.videos, playlists: data.playlists })
         );

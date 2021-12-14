@@ -74,7 +74,7 @@ const Playlist = () => {
             {playlists
               .find((item) => item._id === id)
               .videos.map((item) => (
-                <VideoCard video={item} key={item._id} />
+                <VideoCard video={item} key={item._id} showToast={showToast} />
               ))}
           </div>
           <br />

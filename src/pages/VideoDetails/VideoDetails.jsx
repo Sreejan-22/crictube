@@ -249,7 +249,7 @@ const Video = () => {
           <div className="other-videos-container">
             <h2>Similar Videos</h2>
             {currVideos.map((item) => (
-              <VideoCard video={item} key={item._id} />
+              <VideoCard video={item} key={item._id} showToast={showToast} />
             ))}
           </div>
           <AddToPlaylistModal
