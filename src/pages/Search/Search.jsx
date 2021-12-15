@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   videoSelector,
   setSearchedVideos,
-  // setSearchedVideosEmpty,
+  setSearchedVideosEmpty,
 } from "../../slices/video.slice";
 import Layout from "../../components/Layout/Layout";
 import VideoCard from "../../components/VideoCard/VideoCard";
@@ -34,11 +34,12 @@ const Search = () => {
     });
   };
 
-  // useEffect(() => {
-  //   if (location.pathname !== "/search") {
-  //     dispatch(setSearchedVideosEmpty());
-  //   }
-  // }, [dispatch, location.pathname]);
+  useEffect(() => {
+    // if (location.pathname !== "/search") {
+    //   dispatch(setSearchedVideosEmpty());
+    // }
+    return () => dispatch(setSearchedVideosEmpty());
+  }, [dispatch]);
 
   const search = async (query) => {
     try {
