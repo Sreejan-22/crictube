@@ -22,7 +22,7 @@ const LoginAlertModal = ({ isOpen, onClose }) => {
         <ModalCloseButton />
         <ModalBody>
           <Stack>
-            You need to be logged in to be able to add video to this playlist
+            Login required to be able to add video to this playlist
             <HStack>
               <Button colorScheme="blue" onClick={() => navigate("/login")}>
                 Login

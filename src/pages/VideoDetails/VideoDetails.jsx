@@ -216,7 +216,7 @@ const Video = () => {
                     if (isAuthenticated()) {
                       unsaveVideo();
                     } else {
-                      showToast("You need to be logged in", "info");
+                      showToast("Login required", "info");
                     }
                   }}
                 />
@@ -226,7 +226,7 @@ const Video = () => {
                     if (isAuthenticated()) {
                       saveVideo();
                     } else {
-                      showToast("You need to be logged in", "info");
+                      showToast("Login required", "info");
                     }
                   }}
                 />
@@ -237,7 +237,7 @@ const Video = () => {
                   if (isAuthenticated()) {
                     onOpen();
                   } else {
-                    showToast("You need to be logged in", "info");
+                    showToast("Login required", "info");
                   }
                 }}
               />
