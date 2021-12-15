@@ -17,7 +17,6 @@ import { isAuthenticated, getUser } from "../../utils/auth";
 const main_url = process.env.REACT_APP_BACKEND_URL;
 
 const Search = () => {
-  // const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [searchquery, setSearchquery] = useState("");
   const dispatch = useDispatch();
@@ -35,16 +34,13 @@ const Search = () => {
   };
 
   useEffect(() => {
-    // if (location.pathname !== "/search") {
-    //   dispatch(setSearchedVideosEmpty());
-    // }
     return () => dispatch(setSearchedVideosEmpty());
   }, [dispatch]);
 
   const search = async (query) => {
     try {
       const url = isAuthenticated()
-        ? `${main_url}/searchuservideos/:${getUser().username}?query=${query}`
+        ? `${main_url}/searchuservideos/${getUser().username}?query=${query}`
         : `${main_url}/search?query=${query}`;
 
       const headers = isAuthenticated()
@@ -58,6 +54,7 @@ const Search = () => {
       const res = await fetch(url, { headers: headers });
       const data = await res.json();
       if (data.success) {
+        console.log(data);
         dispatch(
           setSearchedVideos({ videos: data.videos, playlists: data.playlists })
         );
