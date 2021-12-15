@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { videoSelector, setPlaylists } from "../../slices/video.slice";
 import Layout from "../../components/Layout/Layout";
+import LoginNeeded from "../LoginNeeded/LoginNeeded";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useToast } from "@chakra-ui/react";
-import { getUser } from "../../utils/auth";
+import { getUser, isAuthenticated } from "../../utils/auth";
 import { getDate } from "../../utils/date";
 import "./AllPlaylists.css";
 
@@ -28,30 +29,32 @@ const AllPlaylists = () => {
   };
 
   useEffect(() => {
-    const url = `${main_url}/playlists/${getUser().username}`;
+    if (isAuthenticated()) {
+      const url = `${main_url}/playlists/${getUser().username}`;
 
-    setLoading(true);
-    fetch(url, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getUser().token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          dispatch(setPlaylists(data.playlists));
-          setLoading(false);
-        } else {
-          setLoading(false);
-          showToast(data.message, "error");
-        }
+      setLoading(true);
+      fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getUser().token}`,
+        },
       })
-      .catch((err) => {
-        setLoading(false);
-        console.log(err);
-        showToast("Failed to fetch playlists", "error");
-      });
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            dispatch(setPlaylists(data.playlists));
+            setLoading(false);
+          } else {
+            setLoading(false);
+            showToast(data.message, "error");
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          console.log(err);
+          showToast("Failed to fetch playlists", "error");
+        });
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -80,64 +83,76 @@ const AllPlaylists = () => {
   };
 
   return (
-    <Layout>
-      {loading ? (
-        <h1 style={{ color: "white", fontSize: "1.2rem", textAlign: "center" }}>
-          Loading...
-        </h1>
-      ) : (
-        <div>
-          {playlists.length ? (
-            <>
-              <h1
-                style={{
-                  color: "white",
-                  fontSize: "1.5rem",
-                  fontWeight: "600",
-                }}
-              >
-                Playlists
-              </h1>
-              <br />
-              <div className="playlist-container">
-                {playlists
-                  .filter((playlist) => playlist.name !== "Saved")
-                  .map((playlist) => (
-                    <div className="playlist" key={playlist._id}>
-                      <h1 className="playlist-name">{playlist.name}</h1>
-                      <h3>{playlist.videos.length} video(s)</h3>
-                      <h3>Last updated: {getDate(playlist.updatedAt)}</h3>
-                      <br />
-                      <br />
-                      <div>
-                        <Link
-                          to={`/playlist/${playlist._id}`}
-                          className="playlist-link"
-                        >
-                          View Playlist
-                        </Link>
-                        <RiDeleteBin6Line
-                          style={{
-                            color: "rgb(255, 60, 38)",
-                            fontSize: "1.2rem",
-                            cursor: "pointer",
-                          }}
-                          onClick={() => deletePlaylist(playlist._id)}
-                        />
-                      </div>
-                    </div>
-                  ))}
-              </div>
-              <br />
-              <br />
-              <br />
-            </>
+    <>
+      {isAuthenticated() ? (
+        <Layout>
+          {loading ? (
+            <h1
+              style={{
+                color: "white",
+                fontSize: "1.2rem",
+                textAlign: "center",
+              }}
+            >
+              Loading...
+            </h1>
           ) : (
-            <h1 className="h1-style">No playlists found</h1>
+            <div>
+              {playlists.length ? (
+                <>
+                  <h1
+                    style={{
+                      color: "white",
+                      fontSize: "1.5rem",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Playlists
+                  </h1>
+                  <br />
+                  <div className="playlist-container">
+                    {playlists
+                      .filter((playlist) => playlist.name !== "Saved")
+                      .map((playlist) => (
+                        <div className="playlist" key={playlist._id}>
+                          <h1 className="playlist-name">{playlist.name}</h1>
+                          <h3>{playlist.videos.length} video(s)</h3>
+                          <h3>Last updated: {getDate(playlist.updatedAt)}</h3>
+                          <br />
+                          <br />
+                          <div>
+                            <Link
+                              to={`/playlist/${playlist._id}`}
+                              className="playlist-link"
+                            >
+                              View Playlist
+                            </Link>
+                            <RiDeleteBin6Line
+                              style={{
+                                color: "rgb(255, 60, 38)",
+                                fontSize: "1.2rem",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => deletePlaylist(playlist._id)}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                  <br />
+                  <br />
+                  <br />
+                </>
+              ) : (
+                <h1 className="h1-style">No playlists found</h1>
+              )}
+            </div>
           )}
-        </div>
+        </Layout>
+      ) : (
+        <LoginNeeded />
       )}
-    </Layout>
+    </>
   );
 };
 

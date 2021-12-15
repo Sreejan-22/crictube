@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPlaylists, videoSelector } from "../../slices/video.slice";
 import Layout from "../../components/Layout/Layout";
+import LoginNeeded from "../LoginNeeded/LoginNeeded";
 import VideoCard from "../../components/VideoCard/VideoCard";
 import { useToast } from "@chakra-ui/toast";
-import { getUser } from "../../utils/auth";
+import { getUser, isAuthenticated } from "../../utils/auth";
 import "./Saved.css";
 
 const main_url = process.env.REACT_APP_BACKEND_URL;
@@ -26,62 +27,80 @@ const Saved = () => {
   };
 
   useEffect(() => {
-    async function load() {
-      const url = `${main_url}/saved/${getUser().username}`;
+    if (isAuthenticated()) {
+      async function load() {
+        const url = `${main_url}/saved/${getUser().username}`;
 
-      setLoading(true);
+        setLoading(true);
 
-      try {
-        const res = await fetch(url, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getUser().token}`,
-          },
-        });
-        const data = await res.json();
-        if (data.success) {
-          dispatch(setPlaylists(data.playlists));
+        try {
+          const res = await fetch(url, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${getUser().token}`,
+            },
+          });
+          const data = await res.json();
+          if (data.success) {
+            dispatch(setPlaylists(data.playlists));
+            setLoading(false);
+          } else {
+            setLoading(false);
+            showToast(data.message);
+          }
+        } catch (err) {
           setLoading(false);
-        } else {
-          setLoading(false);
-          showToast(data.message);
+          showToast("Something went wrong!");
         }
-      } catch (err) {
-        setLoading(false);
-        showToast("Something went wrong!");
       }
-    }
 
-    load();
+      load();
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   return (
-    <Layout>
-      {loading ? (
-        <h1 style={{ color: "white", fontSize: "1.2rem", textAlign: "center" }}>
-          Loading...
-        </h1>
+    <>
+      {isAuthenticated() ? (
+        <Layout>
+          {loading ? (
+            <h1
+              style={{
+                color: "white",
+                fontSize: "1.2rem",
+                textAlign: "center",
+              }}
+            >
+              Loading...
+            </h1>
+          ) : (
+            <>
+              <h1 className="h1-style">
+                {playlists.find((item) => item.name === "Saved").name}
+              </h1>
+              <br />
+              <div className="playlist-video-container">
+                {playlists
+                  .find((item) => item.name === "Saved")
+                  .videos.map((item) => (
+                    <VideoCard
+                      video={item}
+                      key={item._id}
+                      showToast={showToast}
+                    />
+                  ))}
+              </div>
+              <br />
+              <br />
+              <br />
+            </>
+          )}
+        </Layout>
       ) : (
-        <>
-          <h1 className="h1-style">
-            {playlists.find((item) => item.name === "Saved").name}
-          </h1>
-          <br />
-          <div className="playlist-video-container">
-            {playlists
-              .find((item) => item.name === "Saved")
-              .videos.map((item) => (
-                <VideoCard video={item} key={item._id} showToast={showToast} />
-              ))}
-          </div>
-          <br />
-          <br />
-          <br />
-        </>
+        <LoginNeeded />
       )}
-    </Layout>
+    </>
   );
 };
 
