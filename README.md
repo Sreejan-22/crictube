@@ -1,5 +1,17 @@
 # crictube
 
-Crictube is a video library application containing curated videos on cricket
+### About the project
 
-Tech Stack - MERN Stack
+Crictube is a video library application containing curated videos on cricket. One can watch videos, search for videos, create playlists, save videos to watch them later.
+
+### Tech Stack
+
+**Frontend** - React, Redux Toolkit, CSS, Chakra UI, React Router
+
+**Frontend** - Express, MongoDB + Mongoose
+
+Code for the backend of the application can be found [here](https://github.com/Sreejan-22/video-library-backend)
+
+### Contact
+
+Connect with me on [Twitter](https://twitter.com/sreejan_ch) or [LinkedIn](https://linkedin.com/in/sreejanchaudhury)
