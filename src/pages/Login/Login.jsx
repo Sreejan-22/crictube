@@ -10,9 +10,14 @@ const url = process.env.REACT_APP_BACKEND_URL;
 
 const Login = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const initialState = {
+    email: "",
+    password: "",
+    isSubmitting: "",
+  };
+  const [loginData, setLoginData] = useState(initialState);
+  const [guestLoading, setGuestLoading] = useState(false);
+
   const toast = useToast();
 
   const showToast = (title) => {
@@ -25,17 +30,33 @@ const Login = () => {
     });
   };
 
-  const login = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  const handleInputChange = (e) => {
+    setLoginData({ ...loginData, [e.target.name]: e.target.value });
+  };
+
+  const toggleLoading = (type, value) => {
+    if (type === "guest") {
+      setGuestLoading(value);
+    } else {
+      setLoginData({ ...loginData, isSubmitting: value });
+    }
+  };
+
+  const login = async (isGuestLogin) => {
+    const type = isGuestLogin ? "guest" : "user";
+    const jsonData = isGuestLogin
+      ? {
+          email: process.env.REACT_APP_TEST_EMAIL,
+          password: process.env.REACT_APP_TEST_PASSWORD,
+        }
+      : { email: loginData.email, password: loginData.password };
+
+    toggleLoading(type, true);
 
     try {
       const res = await fetch(`${url}/login`, {
         method: "POST",
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+        body: JSON.stringify(jsonData),
         headers: {
           "Content-type": "application/json",
         },
@@ -44,19 +65,18 @@ const Login = () => {
       if (data.success) {
         const userData = {
           username: data.user.username,
-          email: email,
+          email: data.user.email,
           token: data.token,
         };
         localStorage.setItem("user", JSON.stringify(userData));
-        setLoading(false);
+        toggleLoading(type, false);
         navigate("/");
       } else {
-        setLoading(false);
+        toggleLoading(type, false);
         showToast(data.message);
       }
     } catch (err) {
-      setLoading(false);
-      console.log(err);
+      toggleLoading(type, false);
       showToast("Failed to login");
     }
   };
@@ -64,35 +84,52 @@ const Login = () => {
   return (
     <Layout>
       <div className="signup-wrapper">
-        <form className="signup-container">
+        <form
+          className="signup-container"
+          onSubmit={(e) => {
+            e.preventDefault();
+            login(false);
+          }}
+        >
           <h1>Login</h1>
-          <br />
           <br />
           <h3>Email</h3>
           <Input
+            type="email"
+            name="email"
             isRequired
             focusBorderColor="#a4a6b3"
-            disabled={loading}
-            onChange={(e) => setEmail(e.target.value)}
+            disabled={loginData.isSubmitting || guestLoading}
+            value={loginData.email}
+            onChange={handleInputChange}
           />
           <br />
           <h3>Password</h3>
           <Input
+            name="password"
             type="password"
             isRequired
             focusBorderColor="#a4a6b3"
-            disabled={loading}
-            onChange={(e) => setPassword(e.target.value)}
+            disabled={loginData.isSubmitting || guestLoading}
+            onChange={handleInputChange}
           />
-          <br />
           <br />
           <Button
             colorScheme="red"
             type="submit"
-            isLoading={loading}
-            onClick={login}
+            disabled={guestLoading}
+            isLoading={loginData.isSubmitting}
           >
             Submit
+          </Button>
+          <p style={{ margin: "4px 0px" }}>Or</p>
+          <Button
+            colorScheme="red"
+            disabled={loginData.isSubmitting}
+            isLoading={guestLoading}
+            onClick={() => login(true)}
+          >
+            Login with test credentials
           </Button>
           <br />
           <p>

@@ -1,0 +1,74 @@
+.login-wrapper {
+  width: 100%;
+  padding: 0 30% 0 30%;
+  color: rgba(245, 245, 245, 0.801);
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  background-color: var(--bg-color-sidebar);
+  border-radius: 5px;
+}
+
+.login-container > h1 {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.login-container > h3 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.login-container > input {
+  border-color: #a4a6b3;
+}
+
+.login-container > input:hover {
+  border-color: #a4a6b3;
+}
+
+.login-container > p {
+  text-align: center;
+}
+
+.login-container a {
+  color: #ffffff;
+}
+
+.login-container a:hover {
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 1450px) {
+  .login-wrapper {
+    padding: 0 25% 0 25%;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .login-wrapper {
+    padding: 0 20% 0 20%;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .login-wrapper {
+    padding: 0 10% 0 10%;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .login-wrapper {
+    padding: 0 10% 0 10%;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .login-wrapper {
+    padding: 0 5% 0 5%;
+  }
+}
