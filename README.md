@@ -2,6 +2,8 @@
 
 ### About the project
 
+![screenshot_1](https://github.com/Sreejan-22/crictube/blob/master/screenshot_1.png)
+
 Crictube is a video library application containing curated videos on cricket. One can watch videos, search for videos, create playlists, save videos to watch them later.
 
 ### Tech Stack
