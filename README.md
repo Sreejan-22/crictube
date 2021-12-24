@@ -10,7 +10,7 @@ Crictube is a video library application containing curated videos on cricket. On
 
 **Frontend** - React, Redux Toolkit, CSS, Chakra UI, React Router
 
-**Frontend** - Express, MongoDB + Mongoose
+**Backend** - Express, MongoDB + Mongoose
 
 Code for the backend of the application can be found [here](https://github.com/Sreejan-22/video-library-backend)
 
