@@ -69,6 +69,10 @@
   margin-bottom: 1rem;
 }
 
+.other-videos-container > div {
+  margin-bottom: 1rem;
+}
+
 @media screen and (min-width: 1600px) {
   .other-videos-container {
     width: 400px;
@@ -123,6 +127,10 @@
 
   .other-videos-container > h2 {
     display: none;
+  }
+
+  .other-videos-container > div {
+    margin-bottom: 0rem;
   }
 }
 
