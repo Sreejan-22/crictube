@@ -1,6 +1,6 @@
 # crictube
 
-### [Walkthrough video](https://youtu.be/zoQNaxoiF7Y)
+### Check out the demo video [here](https://youtu.be/zoQNaxoiF7Y)
 
 ### About the project
 
