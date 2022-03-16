@@ -8,6 +8,7 @@ import {
   addToPlaylist,
   removeFromPlaylist,
 } from "../../slices/video.slice";
+import { LazyLoadImage } from "react-lazy-load-image-component"
 import AddToPlaylistModal from "../AddToPlaylistModal/AddToPlaylistModal";
 import { useDisclosure } from "@chakra-ui/react";
 import { Spinner } from "@chakra-ui/spinner";
@@ -125,7 +126,16 @@ const VideoCard = ({ video, showToast }) => {
 
   return (
     <div className="video-card">
-      <img
+      {/* <img
+        src={getImgUrl(video.url)}
+        alt=""
+        onClick={() => {
+          navigate(`/video/${video._id}`, {
+            state: { video },
+          });
+        }}
+      /> */}
+      <LazyLoadImage
         src={getImgUrl(video.url)}
         alt=""
         onClick={() => {
