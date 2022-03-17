@@ -52,9 +52,9 @@ const Video = () => {
   useEffect(() => {
     async function load() {
       const url = isAuthenticated()
-        ? `${main_url}/uservideos/${getUser().username}?category=${
+        ? `${main_url}/uservideos/${getUser().username}/${
             video.category
-          }&currVideoId=${video._id}`
+          }?videoId=${video._id}`
         : `${main_url}/videos/${video.category}?videoId=${video._id}`;
 
       const headers = isAuthenticated()
@@ -69,6 +69,8 @@ const Video = () => {
       try {
         const res = await fetch(url, { headers: headers });
         const data = await res.json();
+
+        console.log(data.videos);
 
         if (data.success) {
           dispatch(
