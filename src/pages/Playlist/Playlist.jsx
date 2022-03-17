@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Layout from "../../components/Layout/Layout";
 import VideoCard from "../../components/VideoCard/VideoCard";
 import { useToast } from "@chakra-ui/toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -59,7 +58,7 @@ const Playlist = () => {
   }, [dispatch, id]);
 
   return (
-    <Layout>
+    <>
       {loading ? (
         <h1 style={{ color: "white", fontSize: "1.2rem", textAlign: "center" }}>
           Loading...
@@ -82,7 +81,7 @@ const Playlist = () => {
           <br />
         </>
       )}
-    </Layout>
+    </>
   );
 };
 

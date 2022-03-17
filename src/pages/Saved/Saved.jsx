@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPlaylists, videoSelector } from "../../slices/video.slice";
-import Layout from "../../components/Layout/Layout";
 import LoginNeeded from "../LoginNeeded/LoginNeeded";
 import VideoCard from "../../components/VideoCard/VideoCard";
 import { useToast } from "@chakra-ui/toast";
@@ -63,7 +62,7 @@ const Saved = () => {
   return (
     <>
       {isAuthenticated() ? (
-        <Layout>
+        <>
           {loading ? (
             <h1
               style={{
@@ -96,7 +95,7 @@ const Saved = () => {
               <br />
             </>
           )}
-        </Layout>
+        </>
       ) : (
         <LoginNeeded />
       )}

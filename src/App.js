@@ -22,18 +22,28 @@ function ToHome({ children }) {
   return isAuthenticated() ? <Navigate to="/" /> : children;
 }
 
+function Wrapper(Element) {
+  return (
+    <Layout>
+      <Element />
+    </Layout>
+  );
+}
+
 function App() {
   return (
     <ChakraProvider style={{ minHeight: window.innerHeight }}>
       <div className="bg"></div>
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={Wrapper(Home)} />
           <Route
             path="signup"
             element={
               <ToHome>
-                <Signup />
+                <Layout>
+                  <Signup />
+                </Layout>
               </ToHome>
             }
           />
@@ -41,22 +51,26 @@ function App() {
             path="login"
             element={
               <ToHome>
-                <Login />
+                <Layout>
+                  <Login />
+                </Layout>
               </ToHome>
             }
           />
-          <Route path="video/:id" element={<Video />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/allplaylists" element={<AllPlaylists />} />
+          <Route path="video/:id" element={Wrapper(Video)} />
+          <Route path="/search" element={Wrapper(Search)} />
+          <Route path="/allplaylists" element={Wrapper(AllPlaylists)} />
           <Route
             path="/playlist/:id"
             element={
               <PrivateRoute>
-                <Playlist />
+                <Layout>
+                  <Playlist />
+                </Layout>
               </PrivateRoute>
             }
           />
-          <Route path="/saved" element={<Saved />} />
+          <Route path="/saved" element={Wrapper(Saved)} />
           <Route
             path="*"
             element={

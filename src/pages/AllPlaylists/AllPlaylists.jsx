@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { videoSelector, setPlaylists } from "../../slices/video.slice";
-import Layout from "../../components/Layout/Layout";
 import LoginNeeded from "../LoginNeeded/LoginNeeded";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useToast } from "@chakra-ui/react";
@@ -87,7 +86,7 @@ const AllPlaylists = () => {
   return (
     <>
       {isAuthenticated() ? (
-        <Layout>
+        <>
           {loading ? (
             <h1
               style={{
@@ -150,7 +149,7 @@ const AllPlaylists = () => {
               )}
             </div>
           )}
-        </Layout>
+        </>
       ) : (
         <LoginNeeded />
       )}

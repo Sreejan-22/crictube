@@ -1,4 +1,3 @@
-import Layout from "../../components/Layout/Layout";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@chakra-ui/react";
 
@@ -6,7 +5,7 @@ const LoginNeeded = () => {
   const navigate = useNavigate();
 
   return (
-    <Layout>
+    <>
       <h1 style={{ textAlign: "center", color: "white", fontSize: "1.2rem" }}>
         Login required!
       </h1>
@@ -22,7 +21,7 @@ const LoginNeeded = () => {
         &nbsp;&nbsp;&nbsp;
         <Button onClick={() => navigate("/signup")}>Signup</Button>
       </div>
-    </Layout>
+    </>
   );
 };
 

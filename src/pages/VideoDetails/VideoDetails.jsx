@@ -10,7 +10,6 @@ import {
   removeFromPlaylist,
 } from "../../slices/video.slice";
 import AddToPlaylistModal from "../../components/AddToPlaylistModal/AddToPlaylistModal";
-import Layout from "../../components/Layout/Layout";
 import VideoCard from "../../components/VideoCard/VideoCard";
 import { Spinner } from "@chakra-ui/spinner";
 import { useToast } from "@chakra-ui/toast";
@@ -105,13 +104,13 @@ const Video = () => {
   /* ADD TO OR REMOVE VIDEO FROM PLAYLIST */
   const addToOrRemoveFromPlaylist = async (e, id) => {
     if (!e.target.checked) {
-      // which means the checkbox has been unchecked just now
+      // the checkbox has been unchecked just now
       // so remove the video from playlist
       const url = `${main_url}/playlists/remove/${getUser().username}`;
 
       dispatch(removeFromPlaylist(url, id, video, showToast));
     } else {
-      // which means the checkbox has been checked just now
+      // the checkbox has been checked just now
       // so add the video from playlist
       const url = `${main_url}/playlists/add/${getUser().username}`;
 
@@ -184,7 +183,7 @@ const Video = () => {
   };
 
   return (
-    <Layout>
+    <>
       {loading ? (
         <div className="loader-container">
           <h1>Loading...</h1>
@@ -261,7 +260,7 @@ const Video = () => {
           />
         </div>
       )}
-    </Layout>
+    </>
   );
 };
 

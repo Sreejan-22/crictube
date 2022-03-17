@@ -8,7 +8,7 @@ import {
   addToPlaylist,
   removeFromPlaylist,
 } from "../../slices/video.slice";
-import { LazyLoadImage } from "react-lazy-load-image-component"
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import AddToPlaylistModal from "../AddToPlaylistModal/AddToPlaylistModal";
 import { useDisclosure } from "@chakra-ui/react";
 import { Spinner } from "@chakra-ui/spinner";
@@ -46,13 +46,13 @@ const VideoCard = ({ video, showToast }) => {
   /* ADD TO OR REMOVE VIDEO FROM PLAYLIST */
   const addToOrRemoveFromPlaylist = async (e, id) => {
     if (!e.target.checked) {
-      // which means the checkbox has been unchecked just now
+      // checkbox has been unchecked just now
       // so remove the video from playlist
       const url = `${main_url}/playlists/remove/${getUser().username}`;
 
       dispatch(removeFromPlaylist(url, id, video, showToast));
     } else {
-      // which means the checkbox has been checked just now
+      // checkbox has been checked just now
       // so add the video from playlist
       const url = `${main_url}/playlists/add/${getUser().username}`;
 

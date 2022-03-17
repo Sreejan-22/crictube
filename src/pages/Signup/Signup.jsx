@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Layout from "../../components/Layout/Layout";
 import { Input, Button } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import "./Signup.css";
@@ -87,7 +86,7 @@ const Signup = () => {
   };
 
   return (
-    <Layout>
+    <>
       <div className="signup-wrapper">
         <form className="signup-container">
           <h1>Sign Up</h1>
@@ -136,7 +135,7 @@ const Signup = () => {
       <br />
       <br />
       <br />
-    </Layout>
+    </>
   );
 };
 

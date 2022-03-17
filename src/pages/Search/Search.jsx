@@ -6,7 +6,6 @@ import {
   setSearchedVideos,
   setSearchedVideosEmpty,
 } from "../../slices/video.slice";
-import Layout from "../../components/Layout/Layout";
 import VideoCard from "../../components/VideoCard/VideoCard";
 import { Input, InputGroup, InputRightAddon } from "@chakra-ui/input";
 import { useToast } from "@chakra-ui/react";
@@ -70,7 +69,7 @@ const Search = () => {
   };
 
   return (
-    <Layout>
+    <>
       <div className="blank-space"></div>
       <div className="search-container">
         <div className="search-section">
@@ -112,7 +111,7 @@ const Search = () => {
         <br />
         <br />
       </div>
-    </Layout>
+    </>
   );
 };
 

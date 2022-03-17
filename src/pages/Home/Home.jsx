@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { videoSelector, setUserData, setVideos } from "../../slices/video.slice";
-import Layout from "../../components/Layout/Layout";
+import {
+  videoSelector,
+  setUserData,
+  setVideos,
+} from "../../slices/video.slice";
 import VideoCard from "../../components/VideoCard/VideoCard";
 import { useToast } from "@chakra-ui/toast";
 import { isAuthenticated, getUser } from "../../utils/auth";
@@ -64,7 +67,7 @@ const Home = () => {
   }, [dispatch]);
 
   return (
-    <Layout>
+    <>
       <>
         {loading ? (
           <div className="loader-container">
@@ -141,7 +144,7 @@ const Home = () => {
           </>
         )}
       </>
-    </Layout>
+    </>
   );
 };
 
