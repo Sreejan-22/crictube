@@ -60,25 +60,27 @@ const AllPlaylists = () => {
   }, []);
 
   const deletePlaylist = async (id) => {
-    const url = `${main_url}/playlists/${getUser().username}/${id}`;
+    if (window.confirm("Are you sure you want to delete this playlist?")) {
+      const url = `${main_url}/playlists/${getUser().username}/${id}`;
 
-    try {
-      const res = await fetch(url, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getUser().token}`,
-        },
-      });
-      const data = await res.json();
-      if (data.success) {
-        dispatch(setPlaylists(data.playlists));
-        showToast(data.message, "info");
-      } else {
-        showToast(data.message, "error");
+      try {
+        const res = await fetch(url, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getUser().token}`,
+          },
+        });
+        const data = await res.json();
+        if (data.success) {
+          dispatch(setPlaylists(data.playlists));
+          showToast(data.message, "info");
+        } else {
+          showToast(data.message, "error");
+        }
+      } catch (err) {
+        showToast("Failed to delete playlists", "error");
       }
-    } catch (err) {
-      showToast("Failed to delete playlists", "error");
     }
   };
 
